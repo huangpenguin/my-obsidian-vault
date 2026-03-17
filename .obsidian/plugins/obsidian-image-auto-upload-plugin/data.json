@@ -1,0 +1,34 @@
+{
+  "uploadByClipSwitch": true,
+  "uploader": "PicGo",
+  "uploadServer": "http://127.0.0.1:36677/upload",
+  "deleteServer": "http://127.0.0.1:36677/delete",
+  "imageSizeSuffix": "",
+  "picgoCorePath": "",
+  "workOnNetWork": false,
+  "fixPath": false,
+  "applyImage": true,
+  "newWorkBlackDomains": "",
+  "deleteSource": true,
+  "imageDesc": "origin",
+  "remoteServerMode": false,
+  "uploadedImages": [
+    {
+      "isEncrypted": 1,
+      "EncryptedData": "356995d0c38a64af6852406b8e6b7592:9e13d7c8952435e6bd5b5c259e35b17c27fa45703b8158a280965af2f095284b3c42ac4143479a315704e9907d96e60669cd61e830fa0cc9e6409bc7351d3748b0f6ee07b0d2289653e52c610c12f19e7ab80abab41e6a7339c04fcc1fd01622a3ee87af7c6f26d705795a762507143a5f3cdc4a870d3cbd470482d9a1d673d17a8f22c837f6bfd8e86e847c28bfd18a3f164f5614c07cf97337d59caea57bd68e1ecea8f4880ab3e74a9d9b51c2c7cae04751751243f2edfbb746bc5e6b899cc3fe561653b5b9d40362f29536787e1b9412b1f2fdc317339d977460b19f54b134bb8029ededcddae9bfb6d782d72299b1acfde56cfa3b7523a9de70cddfde05a65042d6ac855f2ad46979cf81f9b0c70f6ecd52851daa60af05187e5b2019df83b3eca38300fa3e413c7d4d314b0dd95e52aae957fb55171945f33ffdbdda521a64b1dd57b2dddcbf397e4a927e00f5552a7c9917abe487efdac08a9252e5abcdfd57bb63a0ebd44f2475c0902b3b6f7f58c583d138d68c28c53077c71915beb2f87cf20e917c15f62884a8e78b67af4bdd373605e4fe02c28993eb61398c1baabd7d787f1f6e818d80788639b00283687fe5fc6940f95656913378a17b1c3f47e9fa7210642e53b9da32f2e33dc54439bb7d764d2f2af973140fd5bdeca494b891f274fb37fb0956b16a14a422d7c92749e3a1e3510aa0d90db502ff8bdaa5e617b346774efe776e9e58b1ad651f0cc633c6b767c17ec2073ada1ad5a4658bf63aaafa6c84874ac11248b30a97c566f28177611d561eb74da39932c1b741dc0721357b386a6fc7111d98c08f925d2405e5c4846453072199008e8cbe573c056cf451d8ee5b19f4df608c382afc20a896aae20bd773f961ddba1ef30c1aa78696d4db7baf8822f7a3b85d27b88dc9d6ec1f9674a8e55d58d4da205d5a494fa9a44ab5eb0976077012ee49e2e6bf44e68ee030ae1fdce72d550544d33258b05b28f6185e499a66df5c05f48800f47482e411f28de8307e974be47725c9212b32564087623be4f5b9cb7022baba2f1229701034c541569c120f0d101f729604eb86412cdca2f3fd7b90aa3631c5b122eb",
+      "fileName": "20260317133458683.png",
+      "width": 1742,
+      "height": 1298,
+      "filePath": "/Users/huang.pengbin/Library/Application Support/piclist/piclist-clipboard-images/20260317133458683.png",
+      "extname": ".png",
+      "mimeType": "image/png",
+      "imgUrl": "https://raw.githubusercontent.com/huangpenguin/note-images/main/img/20260317133458683.png",
+      "hash": "1bad12347308142ecfe07d325a903e51aaa3c259",
+      "type": "github",
+      "shortUrl": "",
+      "id": "9137e8e7-83c8-48b9-9b1e-b2465e215ac8",
+      "createdAt": 1773722099796,
+      "updatedAt": 1773722099796
+    }
+  ]
+}
