@@ -4,21 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "c1250b83435e1421",
+        "id": "c720269a2b76a273",
         "type": "tabs",
         "children": [
           {
-            "id": "e7364e2ac76de05c",
+            "id": "9b6368557e9f4b7f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2026-03-17.md",
+                "file": "03_meeting/2026-04-06.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-04-06"
+            }
+          },
+          {
+            "id": "255702b21517a67b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notion笔记移植到obsidian.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-03-17"
+              "title": "notion笔记移植到obsidian"
             }
           }
         ]
@@ -53,7 +67,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:技术/通用",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "62ac2bfd61dca098",
@@ -164,13 +179,23 @@
               "icon": "lucide-list",
               "title": "2026-03-17 的大纲"
             }
+          },
+          {
+            "id": "1668d9e10fc6003f",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -180,14 +205,38 @@
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "bases:新建数据库": false
+      "bases:新建数据库": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e7364e2ac76de05c",
+  "active": "9b6368557e9f4b7f",
   "lastOpenFiles": [
-    "first.md",
-    "2026-03-17.md",
+    "03_meeting/2026-04-01.md",
+    "03_meeting/2026-04-06.md",
+    "2026-03-23.md",
+    "每天随手指令.md",
+    "2026-03-18.md",
+    "notion笔记移植到obsidian.md",
+    "03_meeting/2026-03-17.md",
+    "zsd.md",
+    "99_归档/使用Windows内置的无线投屏功能.md",
+    "04_软件，工具/文字编辑/markdown语法+obsidian.md",
+    "04_软件，工具/文字编辑/在obsidian优雅的挪动鼠标.md",
+    "04_软件，工具/文字编辑/[实战]markdown语法+obsidian.md",
+    "04_软件，工具/prompt.md",
+    "99_归档/一个路径的问题(PYTHONPATH).md",
+    "99_归档/工程目录怎么建、工具怎么选（PYTHONPATH）.md",
+    "未命名",
+    "01_项目/cst-ai/産業用CT画像処理のPoCに向けたオープンソース技術調査および導入方針.md",
+    "01_项目/cst-ai",
+    "04_软件，工具/文字编辑",
+    "React基础语法.md",
+    "99_归档",
+    "02_学习",
+    "01_项目",
     "未命名.canvas",
+    "04_软件，工具",
+    "03_meeting",
     "未命名 1.canvas",
     "未命名.base",
     "Pasted image 20260317132515.png"
