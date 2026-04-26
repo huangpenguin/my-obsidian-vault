@@ -13,3 +13,13 @@
     - **结论：VS Code 的 `Cmd + Shift + P`，才等价于 Obsidian 的 `Cmd + P`！**
 
 
+
+> [!f] Fancy Prompts
+> Explain this codebase. Point me to the main entry points, key modules, and anything I should read before making changes.
+>
+>Suggest three small, safe improvements in this codebase. Explain the tradeoffs and wait for me to choose one.
+> 
+
+
+
+
