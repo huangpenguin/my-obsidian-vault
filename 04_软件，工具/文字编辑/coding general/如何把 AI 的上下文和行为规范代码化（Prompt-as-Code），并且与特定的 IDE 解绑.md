@@ -13,15 +13,39 @@
 
 # 🚀 AI 极客全自动工程化操作手册
 
+### 极客的“双保险”策略
+
+如果你经常在两个 Shell 之间切换，或者不确定以后会用哪个，这里有三种处理方案，按**推荐程度**排序：
+
+#### 方案 A：最省事 —— 哪里需要点哪里（推荐）
+
+如果你查出来当前是 `zsh`，就写进 `~/.zshrc`；如果是 `bash`，就写进 `~/.bashrc`。
+
+#### 方案 B：最极客 —— “套娃”同步法（高级推荐）
+
+很多极客会把所有的 `alias` 全都写在 `~/.bashrc` 里，然后在 `~/.zshrc` 的最后一行加上一句：
+
+```
+# 在 .zshrc 里加这一句，意思是：顺便把 bash 的字典也背下来
+[ -f ~/.bashrc ] && source ~/.bashrc
+```
+
+这样你只需要维护一份 `~/.bashrc` 里的别名，`zsh` 也会自动同步。这是最专业的做法，因为 `bash` 是所有服务器的“公约数”。
+
+
+```
+当前 remotes：
+
+- `origin`: `git@github.com:huangpenguin/ai-coding-rules.git`
+- `gitlab`: `git@gitlab.com:huang.pengbin/ai-coding-rules.git`
+## 下载仓库，并设置别名
+
+如果服务器默认是 bash，就写进 bashrc
+echo 'alias init-ai="bash ~/.ai-coding-rules/inject-ai.sh"' >> ~/.bashrc
 ## 场景一：从零新建自己的项目 (The Creator)
 
 _适用情况：你今天突然有了个好点子，准备写一个新的强化学习（RL）算法。_
-
-1. **初始化基础设施**：
-    
-    Bash
-    
-    ```
+1. **初始化基础设施**
     mkdir my-new-rl && cd my-new-rl
     uv init          # 秒级生成现代 pyproject.toml 骨架
     git init         # 初始化 Git（为了让后面的 hook 有地方挂）
