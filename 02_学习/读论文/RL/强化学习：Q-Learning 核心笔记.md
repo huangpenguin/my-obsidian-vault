@@ -61,7 +61,7 @@ $$\text{TD Error} = \text{Q现实} - \text{Q估计}$$
 
 当你弄懂了上面的故事，再看这个经典的 Q-Learning 更新公式，就完全是顺理成章的了：
 
-$$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \max_{a} Q(S', a) - Q(S, A)]$$
+$$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \max_{a} Q(S', a') - Q(S, A)]$$
 
 **公式大白话拆解：**
 
@@ -72,7 +72,7 @@ $$Q(S, A) \leftarrow Q(S, A) + \alpha [R + \gamma \max_{a} Q(S', a) - Q(S, A)]$$
 - $[ \dots ]$ 括号里的一长串：就是刚才算的 **TD Error (Q现实 - Q估计)**。
     
 - **整体逻辑**：**新 Q值 = 老 Q值 + 学习率 $\times$ (现实打脸的落差)**
-    
+- 注意这里的 Q(S', a')里的a'代表的是 “哑变量（Dummy Variable）”或“虚拟变量”，用来求最值的
 
 ---
 
