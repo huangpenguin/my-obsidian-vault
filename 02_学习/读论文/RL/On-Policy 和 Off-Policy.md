@@ -258,7 +258,7 @@ $$Q(S, A) \leftarrow 5 + 0.1 \times (-105) = 5 - 10.5 = -5.5$$
 Python
 
 ```
-# 循环外先选好第一步的动作
+# 循环外先选好第一步的动作，只有一开始是通过最大值选，后面都是
 a = choose_action(s) 
 
 for step in episode:
