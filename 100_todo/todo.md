@@ -3,12 +3,6 @@ ls- lh
 
 卷积操作图示：https://setosa.io/ev/image-kernels/ GPU 对比页面用 AI 工具生成的代码：https://www.blackbox.ai/ 手写数字识别过程演示：https://felixzhang00.github.io/DL/mnist/ 3D CNN 网络可视化：https://adamharley.com/nn_vis/cnn/3d.html
 
-即产即用的log和可视化
-
-
-
-打开 Cursor 的自动执行权限，去开源社区挑几个顺手的 MCP 挂载上，然后专注做好你的 RAG 检索逻辑和测试数据集！
-
 
 
 ### 🌟 GitHub 神级中文开源项目推荐（直接白嫖）
