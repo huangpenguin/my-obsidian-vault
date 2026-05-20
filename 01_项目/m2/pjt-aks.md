@@ -1,4 +1,4 @@
-# pjt-aks
+
 **项目名称：基于多模态 RAG 的智能手册问答与自动化出题系统**
 
 - **核心技术：** Python, FastAPI, Azure OpenAI & Ollama, Langfuse, PyMuPDF, Chroma, uv, GitHub Actions
@@ -48,4 +48,3 @@
         
     - `uv` による高速なパッケージ管理や、`Langfuse` を用いたLLMのプロンプト実行ログ・トークン消費のモニタリング（可観測性）を導入し、実稼働に耐えうる堅牢なシステム基盤を整備しました。
 
-# 我打算的
