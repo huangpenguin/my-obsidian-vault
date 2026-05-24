@@ -401,3 +401,22 @@ tags:
 - Quality job：云 Runner + Docker 镜像，一般 不需要 tag
 - Training job：必须跑在你的 GPU 服务器上，必须要 tag
 - `gpu-server` vs `gpu`：名字无所谓，Job 和 Runner 注册时必须相同
+
+
+```mermaid
+sequenceDiagram
+  participant You as "你"
+  participant Web as "GitLab网页"
+  participant GitLab as "GitLab服务器"
+  participant Runner as "GPU服务器Runner"
+
+  You->>Web: git push 到 main
+  Web->>GitLab: 创建 Pipeline
+  GitLab->>Web: 显示 quality jobs + run_training(manual)
+  Note over GitLab: quality 自动跑在共享Runner
+  You->>Web: 点击 run_training 的 Play
+  GitLab->>Runner: 分配 job（tag=gpu-server）
+  Runner->>Runner: 在GPU服务器执行 docker build/run
+  Runner->>GitLab: 回传日志
+  You->>Web: 在网页看 job 日志
+```
