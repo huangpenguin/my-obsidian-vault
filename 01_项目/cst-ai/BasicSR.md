@@ -76,36 +76,48 @@
 ---
 
 ## 三、推荐操作顺序（gpu01 或本机均可）
+## 执行步骤（润色版）
 
-# 1. 拉代码
+### 1. 拉取代码
 
-git clone https://github.com/XPixelGroup/BasicSR.git # 或你的 fork
-
+```bash
+cd /home/huang/code/cst_ai
+git clone https://github.com/XPixelGroup/BasicSR.git
 cd BasicSR
+```
 
-# 2. 用 uv 建环境（模板规范）
+### 2. 用 uv 创建虚拟环境（模板规范）
 
-uv venv
-
+```bash
+# 优先 3.11；若本机无该解释器，再 fallback 3.10 或系统默认
+uv venv --python 3.11
 source .venv/bin/activate
+```
 
-# 3. 按 BasicSR 原项目方式装依赖（尊重 upstream，别急着 uv init 覆盖）
+后续命令统一在 `BasicSR` 根目录、已 activate 的 venv 中执行。
 
+### 3. 按 BasicSR upstream 方式安装依赖
+
+**顺序很重要**：先解决 PyTorch，再装其余依赖，最后 editable 安装包本身。
+
+```bash
+# 当前机器无 GPU：先装 CPU 版 torch，避免拉 CUDA 大包且保证可 import
+uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# upstream 依赖（requirements.txt 含 addict/lmdb/opencv 等）
 uv pip install -r requirements.txt
 
-uv pip install -e . # ← 对应 BasicSR「安装模式」，等价 setup.py develop
+# 等价于 python setup.py develop；注册 basicsr 包到 venv
+uv pip install -e .
+```
 
-# 4. 注入 AI + CI + Docker 模板（不覆盖已有 train 脚本）
+**可选（仅当后续训练 EDVR/StyleGAN2 等需 C++ 扩展时）**：
 
-init-ai
+```bash
+BASICSR_EXT=True uv pip install -e .
+```
 
-# 5. 写一句项目上下文（给 Cursor/Agent）
-
-mkdir -p .cursor/project-context
-
-# 在 overview.md 里写：这是 BasicSR 图像恢复微调项目，训练入口是 xxx.yml / basicsr/train.py
-
-`init-ai` 之后会发生什么（和 BasicSR 的关系）：
+默认微调 SR 模型一般**不需要**编译扩展；首次部署跳过即可。
 
 |会加上的|不会破坏的|
 |---|---|
@@ -114,26 +126,6 @@ mkdir -p .cursor/project-context
 |`.cursor/project-context/`|你的 `options/*.yml` 训练配置|
 
 因为没有 `pyproject.toml`，`init-ai` 不会自动 `uv add ruff`（见 inject-ai 逻辑）——这是刻意的，避免把 BasicSR 改成另一套包结构。
-
----
-
-## 四、和你的 README 四种场景怎么对应
-
-BasicSR 用法 你的 init-ai 场景
-
-─────────────────────────────────────────────────
-
-clone 全 repo 微调 → 场景四（旧项目/legacy）
-
-pip install + 自建小项目 → 场景二（若有 pyproject）或 场景四
-
-简单模式（不 install） → 仍可先 init-ai，但不推荐长期微调
-
-安装模式（develop） → uv pip install -e . 后再 init-ai ← 你应用这个
-
----
-
-
 
 ---
 
