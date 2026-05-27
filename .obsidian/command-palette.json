@@ -1,6 +1,8 @@
 {
   "pinned": [
     "editor:insert-callout",
-    "editor:insert-codeblock"
+    "editor:insert-codeblock",
+    "editor:insert-horizontal-rule",
+    "editor:insert-table"
   ]
 }
