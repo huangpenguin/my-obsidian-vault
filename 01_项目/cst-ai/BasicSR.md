@@ -133,43 +133,7 @@ pip install + 自建小项目 → 场景二（若有 pyproject）或 场景四
 
 ---
 
-## 五、四种组合一张图（帮助汇报/记忆）
 
-BasicSR 官方
-
-│
-
-┌───────────────┴───────────────┐
-
-│ │
-
-【A】clone 全仓库 【B】pip install 包
-
-微调官方代码 自己新建仓库
-
-│ │
-
-│ ┌──────────┴──────────┐
-
-│ │ │
-
-│ 简单模式（不 install） 安装模式（develop）
-
-│ 像临时搭棚 像办户口
-
-│ │ │
-
-▼ ▼ ▼
-
-你要做的微调 ✓ 不适合 deep 微调 适合干净小项目
-
-│
-
-+── init-ai（场景四）
-
-+── uv pip install -e .
-
-+── 改 .gitlab/ci/train.yml 的 TRAIN_COMMAND 指向 BasicSR 训练命令
 
 ---
 
@@ -183,12 +147,6 @@ TRAIN_COMMAND="python basicsr/train.py -opt options/train/MyModel.yml"
 
 在 gpu-server 上仍是：shell executor Runner → 宿主机 docker build → docker run 跑上述命令。
 
----
-
-## 七、如果领导/同事是 Windows，只 pull 你的「基于 BasicSR 改好的 fork」
-
-- Windows：Docker Desktop + Dev Container 或 WSL2，pull 你的 fork + `init-ai` 规则已在 repo 里 → 主要补 GPU 驱动 / Docker，不必手搓 Ruff、CI 配置
-- GPU 训练：仍建议在 gpu-server + GitLab Play，不在领导 Win 本上跑
 
 ---
 
