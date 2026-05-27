@@ -23,7 +23,44 @@
 |---|---|---|
 |简单模式|工地不登记户口，来了就能干|不 `setup.py develop`，靠 `PYTHONPATH` 或直接跑脚本|
 |安装模式|给项目办户口（editable install）|`pip install -e .` / `setup.py develop`，`import yourpkg.xxx` 随便用|
+## 路线 A/B 和两种模式，能任意组合成四种吗？
 
+不完全是「任意四种」，要分开看两层：
+
+### 第一层：BasicSR 官方的两条大路线（二选一）
+
+||路线 A：clone 全仓库|路线 B：`pip install basicsr` + 自建项目|
+|---|---|---|
+|是什么|在 BasicSR 官方 repo 里改|你自己新建一个 repo，只依赖 basicsr 包|
+|关系|互斥为主——微调官方代码通常选 A；从零搭自己的工程通常选 B||
+
+### 第二层：「简单 / 安装模式」主要属于路线 B
+
+|模式|适用|
+|---|---|
+|简单模式（不 `develop` install）|多为 路线 B 的小项目：脚本直接跑，`PYTHONPATH` 凑合用|
+|安装模式（`pip install -e .`）|路线 A 几乎必做；路线 B 里你的项目也推荐这样做|
+
+所以不是干净的 2×2=4 格，更接近：
+
+路线 A（clone BasicSR）
+
+└─ 实际就是「安装模式」：在 BasicSR 根目录 pip install -e .
+
+（一般不会选 A + 简单模式）
+
+路线 B（自建项目 + pip install basicsr）
+
+├─ 简单模式：小 demo、结构 flat
+
+└─ 安装模式：正式一点的项目
+
+形象说：
+
+- A = 进 BasicSR 原厂车间改产线 → 总要「办户口」（editable install）
+- B = 自己开个小作坊，只买 basicsr 零件 → 可以「临时搭棚」（简单）或「办户口」（安装）
+
+你 超分 + 去 X 光噪声、第一阶段试数据，选 路线 A + editable install 最合适；不必纠结四种组合。
 ---
 
 ## 二、你的情况：pull BasicSR 微调 → 走哪条？
