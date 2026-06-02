@@ -35,6 +35,7 @@ Reading state information... Done
 system update->docker file  edit(NVIDIA Driver 570+;cuda:12.4.1) ->pth choose?/data preprocess?(network input/ output )，dataloader
 
 
+
 ---
 1. usage:
 all-in-one? 10ua,20ua pic      
