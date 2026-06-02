@@ -28,3 +28,7 @@ Building dependency tree
 Reading state information... Done
 === Command detached from window (Mon Jun  1 22:37:10 2026) ===
 === Command terminated with exit status 1 (Mon Jun  1 22:37:20 2026) ==
+
+
+---
+1.数据的用法：
