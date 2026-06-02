@@ -30,7 +30,17 @@ Reading state information... Done
 === Command terminated with exit status 1 (Mon Jun  1 22:37:20 2026) ==
 
 
-nfs-common modified
+
+
+system update->docker file  edit(NVIDIA Driver 570+;cuda:12.4.1) ->pth choose?/data preprocess?(network input/ output )，dataloader
+
 
 ---
-1.数据的用法：
+1. usage:
+all-in-one? 10ua,20ua pic      
+Specialized Denoising?
+
+sr.pth=sr+denoising parameter(1-30)
+denoise.pth(10,25,50)
+2.  crop?
+3. 
