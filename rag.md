@@ -2,10 +2,10 @@
 
 - **核心逻辑与 Agent 框架**：`Python 3.11+` + `Pydantic AI`（提供强类型、动态工具调用与自动重试机制）
 - **模型接入**：`google-genai` SDK（调用 Gemini 2.5 Flash 用于多模态测试，Imagen 3 用于图像生成）
-- **并发与调度引擎**：`Asyncio`（异步网络请求） + `Loguru`（工业级日志记录，用于追踪哪张图卡在了哪个 Agent）
-- **数据层**：`SQLAlchemy` + `PostgreSQL`（记录任务状态、随机数种子、QA 评分，实现断点续传）
-- **资产存储**：`boto3`（标准 S3 协议，自动将过审的图片/视频上传至 AWS S3 或阿里云 OSS）
-- **轻量可视化前端**：`Streamlit` 或 `Gradio`（用于非技术人员配置 Prompt 模板、查看任务进度和 QA 坏图率）
+- **并发与调度引擎**：`Asyncio`（异步网络请求） + `Loguru`+`tenacity`（工业级日志记录，用于追踪哪张图卡在了哪个 Agent）
+- **数据层**：`SQLAlchemy` + `PostgreSQL`+`pgvector`（记录任务状态、随机数种子、QA 评分，实现断点续传）
+- **资产存储**：`MinIO`
+- **轻量可视化前端**：- `Streamlit` ➡️ 投递到 `Streamlit Cloud` 或 `Hugging Face Spaces`（用于非技术人员配置 Prompt 模板、查看任务进度和 QA 坏图率）
 
 2. 系统架构与拓展性设计
 
