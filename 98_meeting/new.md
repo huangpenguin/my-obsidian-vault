@@ -53,3 +53,57 @@ Battery 的 tiff 汇总图特征：
 | 尺寸   | 约 `1280×1148/1149`       |
 | 动态范围 | `0 ~ 53000~65535`（随曝光变化） |
 | 数量   | 10 张，同一物体不同 `110kV + uA` |
+
+---
+## 改动摘要
+
+### 1. `.devcontainer/devcontainer.json`
+
+- 名称：`BasicSR GPU Dev`
+- GPU：`--gpus all`，`--shm-size 16g`
+- 挂载：
+    - `/data` ← `/mnt/data`
+    - `/input` ← `cst_ai/input`（1_battery TIFF 等）
+- 环境变量：`PYTHONPATH`、`INPUT_DIR`、`BATTERY_TIFF_DIR`
+- `postCreateCommand`：只跑 `setup.sh` 装环境，不执行任何训练/测试脚本
+- Python 解释器：`/workspace/.venv/bin/python`
+
+### 2. `.devcontainer/setup.sh`（新建）
+
+首次进容器时自动：
+
+uv venv --python 3.11
+
+uv pip install torch torchvision (cu124)
+
+uv pip install -r requirements.txt && uv pip install -e .
+
+并验证 `basicsr` / `torch.cuda` 是否可用。
+
+### 3. `Dockerfile`
+
+- 增加 OpenCV 需要的系统库（`libgl1` 等）
+- 默认仍是 `CMD ["bash"]`，不自动跑任何项目脚本
+
+### 4. 其他
+
+- 更新 `devcontainer.local.json.example`（无 `/mnt/data` 机器可本地覆盖）
+- `smoke_test` 脚本支持 `BATTERY_TIFF_DIR` 环境变量（容器内已预设）
+
+## 使用方式
+
+1. 在 Cursor 打开 `/home/huang/code/cst_ai/BasicSR`
+2. 命令面板 → Dev Containers: Reopen in Container
+3. 等待 `postCreateCommand` 完成（首次约几分钟）
+4. 之后在容器终端直接写代码、跑命令，例如：
+    
+    python scripts/smoke_test_swinir_gray_dn_battery.py # 手动执行
+    
+    PYTHONPATH=./ python basicsr/train.py -opt options/train/...
+    
+
+容器内数据路径：
+
+- 电池 TIFF：`/input/data_0607/260520_1-battery_data/260520_battery image tiff data`
+- 共享数据盘：`/data`
+- 预训练权重：`/workspace/experiments/pretrained_models/SwinIR/`
