@@ -58,3 +58,75 @@
 |代码|统一读 `os.environ["DATA_DIR"]` 等|
 
 你要做的是改 `devcontainer.json`（以及可选地统一 smoke test 读 env），然后 Rebuild Container（重建容器实例），不是改 Dockerfile 再 build image。
+
+
+
+### 第 1 步：设置环境变量并 Rebuild（必做）
+
+在 gpu01 宿主机 或 Cursor 启动 Dev Container 之前：
+
+export DATA_MOUNT_SOURCE=/home/huang/code/cst_ai/input
+
+然后在 Cursor：Dev Containers: Rebuild Container
+
+> 不需要改 Dockerfile，也不需要 rebuild image，只要 Rebuild Container。
+
+若 Rebuild 报错 `ERROR: Set host env DATA_MOUNT_SOURCE`，说明变量没设好，先在宿主机 shell 里 `export` 再 Rebuild。
+
+### 第 2 步：验证挂载
+
+Rebuild 后进容器终端：
+
+echo $DATA_DIR
+
+ls $DATA_DIR/data_0607
+
+find $DATA_DIR/data_0607 -name '*.tif' | head -20
+
+确认能看到 cylinder 对应的子目录名（记下完整路径）。
+
+### 第 3 步：验证 Python 环境
+
+cd /workspace
+
+source .venv/bin/activate # 或 uv run
+
+python -c "import torch; print(torch.cuda.device_count())" # 应为 4
+
+若 `import cv2` 或 `import basicsr` 报错，需要修 Dockerfile 加 `libgl1` 等系统包，或先用 PIL 版 smoke test（当前脚本主要用 PIL，可能仍能跑）。
+
+### 第 4 步：先跑 cylinder smoke test（单 GPU，现有脚本）
+
+在没做四 GPU 脚本前，可先用现有脚本：
+
+uv run python scripts/smoke_test_swinir_gray_dn_battery.py \
+
+--input-dir "$DATA_DIR/data_0607/<你的cylinder子目录>" \
+
+--output-dir results/swinir_gray_dn_cylinder_smoke
+
+把 `<你的cylinder子目录>` 换成第 2 步找到的实际路径。
+
+### 第 5 步：四 GPU 并行（需 Agent 继续实现）
+
+原计划里的 `smoke_test_swinir_gray_dn.py`（`--devices 0,1,2,3`）还没写。若 cylinder 图很多、想加速，切换到 Agent 模式 让我补这个脚本。
+
+### 第 6 步：看结果
+
+打开 `results/swinir_gray_dn_cylinder_smoke/noise{15,25,50}/`，对比 `*_input.png` 和 `*_SwinIR_grayDN.png`，判断预训练模型对 CT 辐射噪声是否有效。
+
+---
+
+## 一句话总结
+
+- 已做：devcontainer 配置、DATA_DIR 代码改造、文档、`.venv` 重建
+- 卡在你这：没 Rebuild → `/data` 挂载未生效，cylinder 数据容器里还看不到
+- 还没做：四 GPU 脚本、cylinder 实际跑 test、结果评估
+
+你现在最该做的一件事：
+
+export DATA_MOUNT_SOURCE=/home/huang/code/cst_ai/input
+
+然后 Rebuild Container，验证 `ls $DATA_DIR/data_0607` 能看到数据，再跑 smoke test。
+
+Rebuild 成功后，若要继续四 GPU 脚本和自动找 cylinder 路径，切到 Agent 模式告诉我即可。
