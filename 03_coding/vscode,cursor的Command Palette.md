@@ -1,6 +1,3 @@
-### VS Code / Cursor 的终极解惑：`Cmd + P` 到底干嘛的？
-
-你总是分不清，是因为 **Obsidian 把这两个键的逻辑搞反了**！ 在极其硬核的程序员世界（VS Code / Cursor）里，它的逻辑是极其严谨且统一的。请死死记住下面这个公式：
 
 - 📄 **`Cmd + P` = 找“文件” (Path / Project Files)**
     
