@@ -66,3 +66,99 @@ BHCorr = OFF
 - 气缸体图：多角度投影重建后的截面图。图像已经经过反演算法，噪声和伪影被重建过程重新分布了，所以会出现更复杂的纹理、条纹、环状伪影和边缘附近假结构。
 
 所以你用 SwinIR 时，电池这种图可能更容易学；气缸体 CT 图尤其低电流时会难很多，因为模型面对的不是单一噪声，而是“重建噪声 + 物理伪影 + 截断/饱和”。微调有希望，但最好把电池投影图和气缸体 CT 图当成两个不同 domain 来处理。
+
+
+
+
+## 已创建内容
+
+项目结构：
+
+lab-gpu-runbook/
+
+README.md
+
+Dockerfile
+
+pyproject.toml
+
+.gitignore
+
+.gitlab-ci.yml
+
+.gitlab/ci/gpu.yml
+
+scripts/
+
+smoke_gpu.py
+
+train_synthetic.py
+
+train_ddp.py
+
+print_env.py
+
+docs/
+
+01-prerequisites.md
+
+02-gitlab-pipeline.md
+
+03-data-mount.md
+
+04-multi-server-queue.md
+
+05-troubleshooting.md
+
+核心设计：
+
+- Docker 基底：`pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel`
+- torch 约束：`torch>=2.6.0,<2.7.0`
+- GitLab CI 使用 `shell executor` + runner tags：
+    - `lab-gpu`
+    - `gpu01`
+    - `gpu02`
+    - `v100`
+    - `cu124`
+- 手动 job：
+    - `gpu_smoke_auto`
+    - `gpu_smoke_gpu01`
+    - `gpu_smoke_gpu02`
+    - `single_gpu_train`
+    - `multi_gpu_ddp`
+- 数据契约：
+    - host: `/mnt/data/<their-folder>`
+    - container: `/data`
+    - CI variables: `DATA_MOUNT_SOURCE`, `DATA_MOUNT_TARGET`
+
+## 已验证
+
+本机已成功：
+
+python3 -m py_compile scripts/*.py
+
+ruby -e "require 'yaml'; YAML.load_file('.gitlab-ci.yml'); YAML.load_file('.gitlab/ci/gpu.yml')"
+
+docker build -t lab-gpu-runbook .
+
+docker run --rm --gpus all lab-gpu-runbook python scripts/print_env.py
+
+docker run --rm --gpus all lab-gpu-runbook python scripts/smoke_gpu.py
+
+docker run --rm --gpus all lab-gpu-runbook python scripts/train_synthetic.py --steps 5
+
+docker run --rm --gpus all -v /mnt/data:/data:ro -e DATA_DIR=/data lab-gpu-runbook python scripts/print_env.py
+
+docker run --rm --gpus all --shm-size 16g lab-gpu-runbook torchrun --standalone --nproc_per_node=4 scripts/train_ddp.py --steps 3
+
+实际验证结果符合预期：
+
+- `Torch: 2.6.0+cu124`
+- `Torch CUDA build: 12.4`
+- `cuDNN: 90100`
+- `CUDA device count: 4`
+- `Tesla V100-PCIE-32GB`
+- `GPU capability: sm_70`
+- 4 卡 DDP `world_size=4` 成功
+
+有一个验证细节：第一次手动 DDP 没加 `--shm-size 16g`，NCCL 报 `/dev/shm` 不足；已把这个写进 `docs/05-troubleshooting.md`，并用正确参数重跑通过。CI 模板里本来就已包含 `--shm-size 16g`。
