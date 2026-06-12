@@ -11,12 +11,43 @@
 
 
 
-> [!f] Fancy Prompts
-> Explain this codebase. Point me to the main entry points, key modules, and anything I should read before making changes.
->
->Suggest three small, safe improvements in this codebase. Explain the tradeoffs and wait for me to choose one.
-> 
 
 
 
 
+快捷键唤醒
+
+你可以使用以下快捷键随时打开命令面板：
+
+- **Windows / Linux**: `Ctrl + Shift + P` 或 `F1`
+- **macOS**: `Cmd + Shift + P` 或 `F1`
+
+---
+
+核心标识符（输入框首字母的作用）
+
+打开面板后，输入框默认带有一个 `>` 符号，这代表**执行命令**。如果你删掉 `>` 或输入其他符号，它会瞬间切换成其他高效工具：
+
+|输入符号|功能类型|实用场景举例|
+|---|---|---|
+|**`>`** (默认)|**执行命令**|输入 `reload` 重启窗口，或 `theme` 换皮肤|
+|_(什么都不输入)_|**搜索文件**|直接输入文件名，快速跨文件夹打开文件|
+|**`@`**|**跳转符号**|输入 `@函数名` 或 `@变量名`，在当前代码文件中精准定位|
+|**`@:`**|**符号分类**|将当前文件里的函数、类、变量分类展现|
+|**`#`**|**全局搜索符号**|在整个项目的所有文件里寻找某个函数或类|
+|**`:`**|**跳转行号**|输入 `:50` 直接跳到代码第 50 行|
+|**`?`**|**帮助菜单**|列出所有可以输入的符号及其功能|
+
+---
+
+高频实用命令推荐
+
+在 `>` 模式下，以下是开发者最常搜索的命令（支持模糊搜索，输入几个字母即可）：
+
+- **开发调试**：`Developer: Reload Window`（重新加载窗口，常用于插件卡死或配置生效）。
+- **格式化**：`Format Document`（格式化当前文件代码）。
+- **外观切换**：`Preferences: Color Theme`（更换主题颜色）。
+- **快捷键查看**：`Preferences: Open Keyboard Shortcuts`（查看和修改所有快捷键）。
+- **语言切换**：`Change Language Mode`（强制修改当前文件的代码语言类型，如把 text 改为 python）。
+
+---

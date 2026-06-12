@@ -7,38 +7,6 @@ tags:
 
 
 
-### 第一部分：引路人文件（极简版）
-
-这三个文件的作用仅仅是“路牌”，把所有 AI 工具都引导到同一个地方。这样你以后只需要维护一份 `AGENT.md`。
-
-**📄 `.cursorrules` (给 Cursor 看)**
-
-Markdown
-
-```
-# 全局指令
-在回答任何问题或生成代码之前，必须严格阅读并遵循项目根目录下的 `AGENT.md` 文件。
-Please read and strictly follow the `AGENT.md` file in the root directory before proceeding.
-```
-
-**📄 `.github/copilot-instructions.md` (给 Copilot 看)**
-
-Markdown
-
-```
-# 全局指令
-Please read and strictly follow the `AGENT.md` file in the root directory before proceeding.
-```
-
-_(OpenCode 通常默认会自动寻找并读取 `AGENT.md`，所以无需额外路牌)_
-
----
-
-### 第二部分：核心大脑 📄 `AGENT.md` (你的通用模版)
-
-这是你的“真身”，我把你之前的规则进行了专业级的结构化重组，并加入了对 CI/CD 和 PR 的联动引用。
-
-Markdown
 
 ```
 # 🤖 AI Agent 工作指南 (Project AGENT Rules)
@@ -74,10 +42,10 @@ Markdown
 3. `uv run mypy src/ app/ main.py`
 ```
 
----
 
-### 🚀 为什么这套模版无懈可击？
 
-1. **DRY 原则 (Don't Repeat Yourself)**：通过抽离引路人文件，你以后改规矩（比如把 Mypy 换成 Pyright，或者把 Python 3.11 升级到 3.12），只需要改 `AGENT.md` 这一处，Cursor 和 Copilot 都会瞬间同步。
-    
-2. **动态加载上下文**：模版里的第 5 点非常精髓。当你让 AI “帮我写个 PR” 时，它看到第 5 点，就会**自动去读取**你的 `pull_request_template.md`，然后完美填空，根本不用你废话。
+> [!f] Fancy Prompts
+> Explain this codebase. Point me to the main entry points, key modules, and anything I should read before making changes.
+>
+>Suggest three small, safe improvements in this codebase. Explain the tradeoffs and wait for me to choose one.
+
