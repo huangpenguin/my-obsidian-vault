@@ -225,10 +225,10 @@ git push
 
 ## 常见问题
 
-|问题|处理|
-|---|---|
-|Build OOM|用 Docker + `python:3.11-slim`；构建期预下载模型；Space 选 CPU basic 或更高|
-|启动后 chunk 数为 0|`sample_docs/` 没进 Git；或构建期 ingest 失败，看 Logs|
-|API key 报错|检查 Space Secrets 名是否为 `AIAND_API_KEY`（与 `agents.yaml` 一致）|
-|首次访问很慢|正常；可用构建期预 ingest + 预下载模型缓解|
-|观众滥用消耗 API 额度|Demo 可加 rate limit，或文章注明「演示用途」|
+| 问题             | 处理                                                           |
+| -------------- | ------------------------------------------------------------ |
+| Build OOM      | 用 Docker + `python:3.11-slim`；构建期预下载模型；Space 选 CPU basic 或更高 |
+| 启动后 chunk 数为 0 | `sample_docs/` 没进 Git；或构建期 ingest 失败，看 Logs                  |
+| API key 报错     | 检查 Space Secrets 名是否为 `AIAND_API_KEY`（与 `agents.yaml` 一致）    |
+| 首次访问很慢         | 正常；可用构建期预 ingest + 预下载模型缓解                                   |
+| 观众滥用消耗 API 额度  | Demo 可加 rate limit，或文章注明「演示用途」                               |
