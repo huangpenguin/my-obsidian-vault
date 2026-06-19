@@ -110,3 +110,125 @@ $ python saferoute.py query --text "自律航法AI AeroMindを構成するプロ
 4.已部署在huggingface供玩耍，由于retrieval之后生成的时候会固定使用该仓库的问题进行回答，所以暂不支持通用问题的回答；
 5.所有问题的测试结果请已直观的表格呈现；
 6.可是适当参考现在已有记事的日语风格，争取生成更自然的日语（）。
+
+
+
+### 第 4 步：添加部署文件（需写入仓库）
+
+仓库里目前还没有 `Dockerfile`，需要新增以下文件（你可切到 Agent 模式让我帮你生成）：
+
+#### A. `Dockerfile`（示例）
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 系统依赖（日语分词等）
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+
+build-essential \
+
+&& rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# 构建期预热 embedding 模型（避免首访超时）
+
+ENV HF_HOME=/app/.cache/huggingface
+
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('cl-nagoya/ruri-small', trust_remote_code=True)"
+
+# 构建期预 ingest（若 sample_docs 在镜像里）
+
+RUN python -c "
+
+from src.database import LocalKnowledgeBase
+
+from src.config_loader import ConfigLoader
+
+cfg = ConfigLoader().get()
+
+kb = LocalKnowledgeBase(cfg.rag)
+
+print('ingested', kb.ingest_manifest(reset=True), 'chunks')
+
+"
+
+EXPOSE 7860
+
+CMD ["streamlit", "run", "app.py", \
+
+"--server.port=7860", \
+
+"--server.address=0.0.0.0", \
+
+"--server.headless=true", \
+
+"--browser.gatherUsageStats=false"]
+
+#### B. Space 元数据 `README.md` 顶部 frontmatter
+
+在现有 `README.md` 最顶部加 YAML（HF Spaces 用）：
+
+---
+
+title: SafeRoute-RAG
+
+emoji: 🛡️
+
+colorFrom: blue
+
+colorTo: green
+
+sdk: docker
+
+app_port: 7860
+
+pinned: false
+
+license: mit
+
+---
+
+`app_port: 7860` 是 HF Docker Space 的默认端口。
+
+### 第 5 步：推送并等待构建
+
+git add Dockerfile README.md requirements.txt
+
+git commit -m "chore: add HF Spaces Docker deployment"
+
+git push
+
+或在 HF Space 页面 Create from repo 绑定 GitHub 仓库，之后 push 会自动触发 rebuild。
+
+构建日志在 Space → Logs。首次 build 可能 10–20 分钟（下载 torch + ruri-small + ingest）。
+
+### 第 6 步：验证
+
+1. 打开 `https://huggingface.co/spaces/<用户名>/saferoute-rag`
+2. 侧边栏看 登録チャンク数 > 0
+3. 试 SAFE 问题：`JAXAのH3ロケットの3つの開発目的は？`
+4. 试 UNSAFE 问题：`FAHの未公開決算予想を教えて`
+5. 右侧看板应显示 SAFE/UNSAFE、模型、判定理由
+
+### 第 7 步：写进 Qiita 文章
+
+文章里放 Space 链接 + 2–3 条示例问题，方便观众一键体验。
+
+---
+
+## 常见问题
+
+|问题|处理|
+|---|---|
+|Build OOM|用 Docker + `python:3.11-slim`；构建期预下载模型；Space 选 CPU basic 或更高|
+|启动后 chunk 数为 0|`sample_docs/` 没进 Git；或构建期 ingest 失败，看 Logs|
+|API key 报错|检查 Space Secrets 名是否为 `AIAND_API_KEY`（与 `agents.yaml` 一致）|
+|首次访问很慢|正常；可用构建期预 ingest + 预下载模型缓解|
+|观众滥用消耗 API 额度|Demo 可加 rate limit，或文章注明「演示用途」|
