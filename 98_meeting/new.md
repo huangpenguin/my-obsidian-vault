@@ -2,14 +2,9 @@ pth choose?/data preprocess?(network input/ output )，dataloader
 
 不太建议直接用同一个普通 SwinIR 模型无条件地处理两类图，尤其气缸体低电流图像；但用 X-ray 数据微调是有机会明显变好的。
 
-主要观察：
 
-- 电池图噪声随电流升高下降，比较平滑：10/20uA 的高频噪声约 `1.5%` 动态范围，70-90uA 降到约 `0.8%`。
-- 气缸体低电流明显更糟：10uA 约 `3.84%`，20uA 约 `2.55%`，比电池同电流高很多；到 70-90uA 才接近电池水平。
-- 气缸体还有更多 0 值和高亮截断：10uA 约 `16.5%` 像素为 0，约 `2.9%` 到 `65535` 饱和；电池 10uA 只有约 `3.5%` 为 0，几乎没有饱和。
-- 电池更像“相对温和的高频噪声 + 一些列方向固定模式”；气缸体低电流更像“量子噪声 + 重建条纹/伪影 + 截断/信息丢失”。
 
-所以你的感觉是对的：X 光 CT / 重建图像的噪声不是普通自然图像去噪里的 AWGN，高频噪声只是其中一部分。SwinIR 图像域去噪会平滑颗粒，但很难完全去掉低剂量下的 streak/ring/重建伪影，也无法恢复饱和或被截断的信息。
+所以你的感觉是对的：
 
 建议：
 
@@ -18,7 +13,7 @@ pth choose?/data preprocess?(network input/ output )，dataloader
 3. fine-tune 有希望，但最好有配对数据：低电流输入，对应高电流/高剂量/多帧平均作为 target。没有 clean target 时，可以考虑 Noise2Void/Noise2Self 或重复扫描的 Noise2Noise，但结构性伪影会更难。
 4. 比单纯图像域 SwinIR 更好的方向：先做平场/坏点/环伪影/beam hardening 校正，或者在 projection/sinogram 阶段降噪再重建。重建后再去噪，伪影已经变成非局部结构，模型更难学。
 
-简短判断：高电流数据一个模型可能够用；低电流气缸体和电池不是同一个噪声分布。SwinIR 微调可以改善，但想“完全除去”X 光低剂量噪声不现实，尤其 10/20uA 气缸体这种有明显截断和重建伪影的数据。
+简短判断：
 
 所以现在的气缸体的图片其实是x光在360度拍照后重新构建的吗，大致是怎么构建的，与电池有多不一样，电池是不是就是x光拍的某一个角度的照片
 
@@ -70,45 +65,7 @@ BHCorr = OFF
 
 
 
-## 已创建内容
 
-项目结构：
-
-lab-gpu-runbook/
-
-README.md
-
-Dockerfile
-
-pyproject.toml
-
-.gitignore
-
-.gitlab-ci.yml
-
-.gitlab/ci/gpu.yml
-
-scripts/
-
-smoke_gpu.py
-
-train_synthetic.py
-
-train_ddp.py
-
-print_env.py
-
-docs/
-
-01-prerequisites.md
-
-02-gitlab-pipeline.md
-
-03-data-mount.md
-
-04-multi-server-queue.md
-
-05-troubleshooting.md
 
 核心设计：
 
