@@ -8,10 +8,6 @@ pth choose?/data preprocess?(network input/ output )，dataloader
 
 建议：
 
-1. 如果用一个模型，最好加条件：例如把 `uA/kV` 或估计噪声强度作为条件输入，或者训练不同噪声等级混合数据。普通“单模型无条件去噪”容易在低电流气缸体上欠去噪，在高电流/电池上过平滑。
-2. 如果追求效果，低电流气缸体建议单独 fine-tune，至少和电池分域训练或做 domain-balanced 训练。
-3. fine-tune 有希望，但最好有配对数据：低电流输入，对应高电流/高剂量/多帧平均作为 target。没有 clean target 时，可以考虑 Noise2Void/Noise2Self 或重复扫描的 Noise2Noise，但结构性伪影会更难。
-4. 比单纯图像域 SwinIR 更好的方向：先做平场/坏点/环伪影/beam hardening 校正，或者在 projection/sinogram 阶段降噪再重建。重建后再去噪，伪影已经变成非局部结构，模型更难学。
 
 
 
