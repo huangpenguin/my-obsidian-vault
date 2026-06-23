@@ -1,21 +1,3 @@
-pth choose?/data preprocess?(network input/ output )，dataloader
-
-不太建议直接用同一个普通 SwinIR 模型无条件地处理两类图，尤其气缸体低电流图像；但用 X-ray 数据微调是有机会明显变好的。
-
-
-
-所以你的感觉是对的：
-
-建议：
-
-
-
-
-
-
-
-
-
 核心设计：
 
 - Docker 基底：`pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel`
