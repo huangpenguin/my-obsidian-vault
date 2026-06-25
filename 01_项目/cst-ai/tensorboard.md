@@ -338,3 +338,38 @@ uv run python basicsr/train.py \
 mlops-gpu 模板 Docker 镜像已含 conda PyTorch，但 inject 后的 devcontainer postCreate 只跑 uv sync --dev（空 runtime deps），GitLab CI 却对旧项目跑 uv pip install -r requirements.txt；agent 按规则用 uv run 时会重建 .venv 并重装 torch，且可能从 PyPI 装到与 V100/基础镜像不兼容的版本。需让 devcontainer postCreate 与 CI before_script 对齐、规范 torch cu124 index、并处理「空 pyproject.toml + 有 requirements.txt」的半迁移状态。
 
 请你看看接下来怎么做，注意不要太多训练，能跑通即可，我最后是runner中启动
+
+
+# A. shell 是否正常
+date
+
+# B. conda 的 node 是否本身就会卡（很常见）
+timeout 5 which node
+timeout 5 node -v
+echo "node exit=$?"
+
+# C. 系统 node（若有）
+timeout 5 /usr/bin/node -v 2>/dev/null || echo "no /usr/bin/node"
+
+# D. 绑端口测试（5 秒必须结束）
+timeout 5 node -e "require('net').createServer().listen(0,'127.0.0.1',()=>{console.log('bind ok');process.exit(0)})"
+echo "bind exit=$?"
+
+
+pkill -9 -f 'cursor-server' 2>/dev/null
+pkill -9 -f 'multiplex-server' 2>/dev/null
+sleep 1
+ps aux | grep -E '[c]ursor|[m]ultiplex' || echo "no cursor procs"
+
+timeout 30 rm -rf ~/.cursor-server
+echo "rm exit=$?"
+
+ls ~/.cursor-server 2>&1   # 应是 No such file
+
+timeout 30 rm -rf /tmp/cursor-* /tmp/devcontainer-cli-* 2>/dev/null
+echo "tmp clean done"
+
+
+`rm` 超过 30 秒仍无 `rm exit=0` → Ctrl+C，执行
+ls -la ~/.cursor-server
+ls -la ~/.cursor-server/data 2>/dev/null
