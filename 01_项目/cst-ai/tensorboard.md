@@ -373,3 +373,103 @@ echo "tmp clean done"
 `rm` 超过 30 秒仍无 `rm exit=0` → Ctrl+C，执行
 ls -la ~/.cursor-server
 ls -la ~/.cursor-server/data 2>/dev/null
+
+
+
+
+
+### 2. 在 `gpu01` 上执行，不要用 `pkill`
+
+# 查看当前锁 owner，不用 ps aux
+
+for p in 2368757 $(pgrep -u "$USER" -f 'cursor|multiplex|cursor-server' 2>/dev/null); do
+
+[ -e "/proc/$p" ] || continue
+
+echo "PID=$p"
+
+tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null; echo
+
+awk '{print "state="$3}' "/proc/$p/stat" 2>/dev/null
+
+done
+
+然后按 PID 杀，不要用 `pkill -f`：
+
+for p in 2368757 $(pgrep -u "$USER" -f 'cursor|multiplex|cursor-server' 2>/dev/null); do
+
+[ -e "/proc/$p" ] || continue
+
+/bin/kill -TERM "$p" 2>/dev/null
+
+done
+
+sleep 2
+
+for p in 2368757 $(pgrep -u "$USER" -f 'cursor|multiplex|cursor-server' 2>/dev/null); do
+
+[ -e "/proc/$p" ] || continue
+
+/bin/kill -KILL "$p" 2>/dev/null
+
+done
+
+如果这里 `pgrep` 也卡，用只处理已知 PID 的最小版：
+
+/bin/kill -TERM 2368757 2>/dev/null
+
+sleep 2
+
+/bin/kill -KILL 2368757 2>/dev/null
+
+test -e /proc/2368757 && echo "2368757 still exists" || echo "2368757 gone"
+
+test -e /proc/2368757 && echo "2368757 still exists" || echo "2368757 gone"
+2368757 still exists
+
+### 3. 删掉 cursor-server 的锁和半成品
+
+# 先不要 find 全树，直接删整个目录
+
+timeout 30 rm -rf ~/.cursor-server
+
+echo "rm=$?"
+
+ls ~/.cursor-server 2>&1
+
+期望：
+
+rm=0
+
+ls: cannot access '/home/huang/.cursor-server': No such file or directory
+
+## 如果 PID 仍然存在
+
+检查状态：
+
+awk '{print $3}' /proc/2368757/stat 2>/dev/null
+
+如果输出是 `D`，代表内核不可中断 I/O，`kill -9` 也没用。这个状态下只能：
+
+- 等 I/O 恢复
+- 或重启 `gpu01`
+
+如果不是 `D`，再杀一次通常会消失。
+
+## 再连接时避免再次抢锁
+
+本机 `settings.json` 确认：
+
+{
+
+"remote.SSH.serverInstallTimeout": 300,
+
+"remote.SSH.useExecServer": false,
+
+"remote.SSH.enableDynamicForwarding": false
+
+}
+
+然后只开一个 Cursor 窗口连 `gpu01`。安装期间不要同时开另一个 Cursor 窗口，也不要在服务器上删 `~/.cursor-server`。
+
+一句话：当前是并发安装锁，先把本机 Cursor 这个“重试源”停掉，再杀持锁 PID，删 `~/.cursor-server`，最后单窗口重装。
