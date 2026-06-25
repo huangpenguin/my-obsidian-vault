@@ -331,3 +331,10 @@ uv run python basicsr/train.py \
 --auto_resume
 
 会从 `training_states/` 里最新的 `.state` 恢复。
+
+
+请你重新整理一下任务状态，我现在重新设置一下项目，因为刚才这个项目的环境混乱了，如下问题刚解决：
+
+mlops-gpu 模板 Docker 镜像已含 conda PyTorch，但 inject 后的 devcontainer postCreate 只跑 uv sync --dev（空 runtime deps），GitLab CI 却对旧项目跑 uv pip install -r requirements.txt；agent 按规则用 uv run 时会重建 .venv 并重装 torch，且可能从 PyPI 装到与 V100/基础镜像不兼容的版本。需让 devcontainer postCreate 与 CI before_script 对齐、规范 torch cu124 index、并处理「空 pyproject.toml + 有 requirements.txt」的半迁移状态。
+
+请你看看接下来怎么做，注意不要太多训练，能跑通即可，我最后是runner中启动
