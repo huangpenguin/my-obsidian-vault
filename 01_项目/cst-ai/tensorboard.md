@@ -1,117 +1,93 @@
-# 📊 SwinIR 训练监控与日志读取指南
+## TensorBoard 在本项目里怎么工作
 
-当前状态：使用 Runner 后台训练中
+训练配置里开了 `use_tb_logger: true`（见 `train_SwinIR_grayDN_cylinderblock.yml`）。BasicSR 在训练时把标量（主要是 `losses/l_pix` 等）写到 TensorBoard event 文件。
 
-实验配置：`train_SwinIR_grayDN_cylinderblock_noise15_ft_P128W8.yml`
+本地 / 容器内（未设 CI 环境变量时）默认路径：
 
-## 一、 核心技能：如何看懂日志 (Log)
+<repo>/tb_logger/<实验名>/
 
-既然是在 Runner 里跑，你通常面对的是不断滚动的终端输出或文本日志。
+Cylinderblock 实验名：`train_SwinIR_grayDN_cylinderblock_noise15_ft_P128W8`
 
-### 1. 找到日志文件
+容器里也可以直接：
 
-如果你能进到挂载了目录的宿主机或容器，日志通常在：
-
-Bash
-
-```
-# 进入根目录
-cd /workspace # 或你的 BasicSR 路径
-
-# 找到最新的 log 文件
-ls -lt experiments/train_SwinIR_grayDN_cylinderblock_noise15_ft_P128W8/*.log
-```
-
-### 2. 实时追踪训练状态 (每 100 iter)
-
-使用 `tail` 命令实时查看最后几行日志：
-
-Bash
-
-```
-tail -f experiments/train_SwinIR_grayDN_cylinderblock_noise15_ft_P128W8/train*.log
-```
-
-**日志长这样：**
-
-`[train..][epoch: 0, iter: 100, lr:(1.000e-04,)] [eta: 2:30:00, time: 0.350 (0.120)] l_pix: 1.2345e-02`
-
-**重点盯什么：**
-
-- **`l_pix` (Pixel Loss)**：最核心的指标！不需要每次都变小，但**总体趋势必须是下降的**。如果它变成 `NaN`，或者一直卡在一个数字不动，说明训练崩了，直接停掉。
-    
-- **`eta`**：预计剩余时间，帮你规划什么时候来看结果。
-    
-- **报错信息**：留意有没有 `OOM` (显存溢出) 或找不到图片的报错。
-    
-
-### 3. 提取验证集得分 (每 2000 iter)
-
-训练每 2000 步会自动在验证集上算分。不用在满屏的日志里翻，直接用 `grep` 抓取：
-
-Bash
-
-```
-grep -A2 "Validation CylinderblockPairedVal" experiments/train_SwinIR_grayDN_cylinderblock_noise15_ft_P128W8/train*.log
-```
-
-**正常会输出类似：**
-
-> psnr: 28.1234 Best: 28.5678 @ 4000 iter
-> 
-> ssim: 0.8123 Best: 0.8201 @ 4000 iter
-
-**重点盯什么：**
-
-- 看 `psnr` 和 `ssim` 是否在稳步提升。
-    
-- 看 `Best` 停留在哪个 iter。
-    
-
-## 二、 进阶监控：使用 TensorBoard (看趋势)
-
-如果你觉得看文本太累，可以通过 TensorBoard 看可视化曲线。
-
-**启动方法**（在能访问 `tb_logger` 目录的终端运行）：
-
-Bash
-
-```
 uv run tensorboard --logdir tb_logger --port 6006 --bind_all
-```
 
-浏览器打开 `http://localhost:6006`（若在服务器上，需做端口转发）。
+---
 
-**看这三条线就够了：**
+## CI 训练时写到哪里
 
-- `losses/l_pix`：训练 loss（应呈下降趋势）
-    
-- `metrics/.../psnr`：验证集 PSNR（应呈上升趋势）
-    
-- `metrics/.../ssim`：验证集 SSIM（应呈上升趋势）
-    
+CI job 会先跑 `scripts/ci_storage.py prepare`，设置：
 
-## 三、 关键节点：训练时后台都在干什么？
+BASICSR_TB_LOGGER_ROOT=/home/huang/cst_ai/ci_outputs/{PipelineID}/tb_logger
 
-为了让你心里有底，这是你的 YML 配置设定的自动时间表：
+对应 GPU 宿主机 NFS：
 
-|**频率**|**后台动作**|**你的关注点**|
+/mnt/home/huang/cst_ai/ci_outputs/{PipelineID}/tb_logger/<实验名>/
+
+同时有 `latest` 软链 → 最近一次训练：
+
+/mnt/home/huang/cst_ai/ci_outputs/latest/tb_logger/...
+
+文本日志在并行路径 `experiments/<实验名>/train_*.log`。
+
+---
+
+## CI 能不能直接打开网页看？
+
+GitLab 网页里没有内置 TensorBoard 面板；访问要靠宿主机或本地下载。
+
+### 方式 1：SSH + 脚本（推荐，训练进行中也可看）
+
+在 GPU 宿主机上：
+
+# 看所有 pipeline 的 TB（会扫整个 ci_outputs 树）
+
+bash scripts/serve_tensorboard.sh /mnt/home/huang/cst_ai/ci_outputs
+
+# 或只看某次
+
+bash scripts/serve_tensorboard.sh /mnt/home/huang/cst_ai/ci_outputs/latest
+
+脚本会起一个 `tensorflow/tensorflow` 容器，默认 6006 端口。
+
+在你笔记本上端口转发：
+
+ssh -L 6006:localhost:6006 huang@<gpu-host>
+
+浏览器打开：`http://localhost:6006`
+
+### 方式 2：GitLab Artifacts（备份，14 天）
+
+CI `after_script` 会把 TB 拷到：
+
+results/cylinderblock_swinir_graydn/tb_logger/
+
+从 GitLab job 页面下载 Artifacts 后，在本机：
+
+tensorboard --logdir /path/to/downloaded/tb_logger --port 6006
+
+### 方式 3：只看文本 log（不用 TB）
+
+tail -f /mnt/home/huang/cst_ai/ci_outputs/latest/experiments/*/train_*.log
+
+---
+
+## 当前 CI 配置下 TB 里有什么
+
+`train_cylinderblock_swinir_graydn` 里用了 `val=~`，训练过程中不做 val，因此 TB 里主要是 训练 loss，一般没有 val PSNR/SSIM 曲线。要看验证指标需训完后单独跑 `basicsr/test.py`。
+
+---
+
+## 小结
+
+|场景|路径|怎么访问|
 |---|---|---|
-|**每 100 iter**|终端/日志打印 `l_pix`, `lr`, `eta`|Loss 是否在下降，有无报错|
-|**每 2000 iter**|在 val 集算 PSNR/SSIM，写入日志和 TB|模型指标是否提升|
-|**每 5000 iter**|保存模型权重 (`.pth`) 和状态 (`.state`)|确认磁盘空间足够，权重已生成|
-|**训练结束**|保存 `net_g_latest.pth` 并再跑一次 val|准备进行最终的视觉对比测试|
+|本地容器训练|`tb_logger/<exp_name>/`|容器内 `tensorboard --logdir tb_logger`|
+|CI 持久化|`/mnt/home/huang/cst_ai/ci_outputs/{PipelineID}/tb_logger/`|宿主机 `serve_tensorboard.sh` + SSH 转发|
+|CI Artifacts|job 下载包里的 `tb_logger/`|本机 `tensorboard --logdir ...`|
+|GitLab 网页|—|无直接 TB UI|
 
-## 四、 极简排障与验证指南
-
-### 1. 跑起来的前 10 分钟看什么？
-
-- 日志有无滚动？
-    
-- `l_pix` 是否为正常数值（不是 NaN）？
-    
-- 有没有立刻报错中断？
-    
+训练跑起来后，在 GPU 机上执行 `bash scripts/serve_tensorboard.sh /mnt/home/huang/cst_ai/ci_outputs/latest`，再 SSH 转发 6006 即可实时看曲线。
 
 ### 2. 意外中断了怎么办？
 
