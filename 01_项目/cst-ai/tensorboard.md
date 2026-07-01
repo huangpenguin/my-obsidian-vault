@@ -99,9 +99,8 @@ Bash
 uv run python basicsr/train.py -opt options/train/SwinIR/train_SwinIR_grayDN_cylinderblock.yml --auto_resume
 ```
 
-### 3. 指标很高，就算成功了吗？(⚠️ 避坑警告)
+### 3. 指标很高，就算成功了吗？
 
-**绝对不是！**
 
 对于 X 光低剂量去噪，PSNR/SSIM 只能作参考。指标高不代表条纹/环伪影消失了，甚至可能出现“过度平滑”或“假结构”。
 
