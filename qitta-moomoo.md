@@ -24,10 +24,17 @@ macos的话是使用dmg安装，注意自己的系统内核是arm还是intel
 如果您持有 **ChatGPT Plus / Team / Pro / Enterprise** 账号的话，请跳过下面的安装cc switch和
 
 # 准备好ai&的api
-*基本上和events说明界面一样,只是请注意api只会在创建的时候保存一次*
-
+*基本上和events说明界面一样,只是请注意api只会在创建的时候保存一次，注意复制*
+引用：
+**ai& Inferenceの無料トライアル（クレジットカードの登録不要）**
+注意这里可以不用登陆信用卡，有个小按钮
+1. [https://console.aiand.com](https://console.aiand.com/) にてユーザー登録
+2. ホーム画面の右上にある「Credits:$0.00」をクリック
+3. Enter Amountで$50を選択し、「Purchase」をクリック
+4. プロモーションコードを追加で【unitabetai】を入力
 
 # 安装cc switch
 *ccswitch是用来将我们的自定义提供商ai&的api接入codex*
+
 
 
