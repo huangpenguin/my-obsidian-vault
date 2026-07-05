@@ -24,7 +24,7 @@ macos的话是使用dmg安装，注意自己的系统内核是arm还是intel
 如果您持有 **ChatGPT Plus / Team / Pro / Enterprise** 账号的话，请跳过下面的安装cc switch和
 
 # 准备好ai&的api
-
+*基本上和events说明界面一样,只是请注意*
 
 
 # 安装cc switch
