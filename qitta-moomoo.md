@@ -25,9 +25,10 @@ macos的话是使用dmg安装，注意自己的系统内核是arm还是intel
 
 # 准备好ai&的api
 *基本上和events说明界面一样,只是请注意api只会在创建的时候保存一次，注意复制*
+*注意这里可以不用登陆信用卡，有个小按钮*
 引用：
 **ai& Inferenceの無料トライアル（クレジットカードの登録不要）**
-注意这里可以不用登陆信用卡，有个小按钮
+
 1. [https://console.aiand.com](https://console.aiand.com/) にてユーザー登録
 2. ホーム画面の右上にある「Credits:$0.00」をクリック
 3. Enter Amountで$50を選択し、「Purchase」をクリック
