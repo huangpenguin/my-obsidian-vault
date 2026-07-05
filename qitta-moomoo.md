@@ -10,7 +10,6 @@
 5.本次我们采用codex.app，虽然貌似不会被cc switch给识别到安装了codex（因为是通过系统指令codex来检查的），但是方便新手直接以web端的体验进行使用
 # 安装codex
 *本次我们codex.app，可以直接拖动或者安装包安装，考虑到面向新手的体验，不实用cli，但是大致步骤是差不多的，不过codex.app是类似web chat的形式很多可以交互式控制而cli更像是在终端中进行，需要使用简单的指令进行配置和使用。*
-### 1. 下载 Codex Desktop
 
 前往 OpenAI 官方下载页面：
 
