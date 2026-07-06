@@ -103,3 +103,47 @@ CC Switch 是一个 AI 编程工具管理器，可以统一管理 Codex、Claude
 ---
 # 配置cc switch
 插图，基本上找到codex的选项然后点击右上角的加号就能新生成一个配置了。基本上来说cc swtich只是帮助通过gui的方法修改config，所以其实手动去修改配置也行。此外、如果有自己的**ChatGPT Plus / Team / Pro / Enterprise**也可以在这里进行自由的切换
+
+将如下的配置文件拷到最下方的详细配置指令中如图（插图），同时
+这里我们使用的是glm5.2模型，
+‘’‘ 
+model = "zai-org/glm-5.2"
+model_provider = "aiand"
+web_search = "disabled"
+
+[model_providers.aiand]
+name = "ai&"
+base_url = "https://api.aiand.com/v1"
+wire_api = "responses"
+
+[tools]
+view_image = false
+
+[features]
+unified_exec = false
+apps = false
+browser_use = false
+browser_use_external = false
+computer_use = false
+image_generation = false
+multi_agent = false
+in_app_browser = false
+'''
+然后将api拷到下图的api key的地方，注意这一步和ai&官方的步骤有出入，因为官方给的方法是针对
+插图api
+codex.cli的教程，我们这里使用app就是图简化，所以许多可以通过cc switch实现的gui的操作就没必要去改系统环境变量了。
+
+然后配置成功，在cc switch点击启用该配置，接着重启codex即可使用。
+注意：目前有bug，可以添加ai&的别的模型但是无法在codex中快速切换，所以最好需要别的模型的时候去cc switch里手动改前面提到的配置（model="zai-org/glm-5.2"）实现更换模型。
+具体bug的复现可见https://youtu.be/v3fDWFRzS7E?si=V77FQVsNE-upcUVl
+平时工作推荐一直使用glm5.2或者deepseek v4 pro即可。
+
+
+# 安装MooMoo skill
+*codex确认配置好之后即可让codex接管全部操作，此时只需要注意授权codex即可，同理此操作也适用于其他的skill*
+
+来到官网
+https://www.moomoo.com/ja/skillhub
+然后复制给agent的prompt
+"ガイドに従って Moomoo Skills をインストール：https://www.moomoo.com/skills/moomoo-install.md"
+一直yes确认即可安装好需要的openD和
