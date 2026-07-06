@@ -146,4 +146,7 @@ codex.cli的教程，我们这里使用app就是图简化，所以许多可以�
 https://www.moomoo.com/ja/skillhub
 然后复制给agent的prompt
 "ガイドに従って Moomoo Skills をインストール：https://www.moomoo.com/skills/moomoo-install.md"
-一直yes确认即可安装好需要的openD和
+一直yes确认即可安装好需要的openD和skills，然后登陆MooMoo账号，在openD网关中显示已连接即可获取美股数据了，请注意自己是否有api权限，部分权限貌似需要一定的交易额或者直接购买。
+
+注意：
+codex默认会在你的启动位置进行部署，以及安装的sdk和各种需要做图的包都会默认安装在系统python环境中
