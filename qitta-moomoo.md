@@ -101,4 +101,4 @@ CC Switch 是一个 AI 编程工具管理器，可以统一管理 Codex、Claude
 
 ---
 # 配置cc switch
-插图，基本上找到codex的选项然后点击右上角的加号就能新生成一个配置了。基本上来说cc swtich只是帮助通过gui的方法修改config，所以其实手动去修改配置也行。此外
+插图，基本上找到codex的选项然后点击右上角的加号就能新生成一个配置了。基本上来说cc swtich只是帮助通过gui的方法修改config，所以其实手动去修改配置也行。此外、如果有自己的**ChatGPT Plus / Team / Pro / Enterprise**也可以在这里进行自由的切换
