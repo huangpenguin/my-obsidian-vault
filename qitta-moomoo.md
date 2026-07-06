@@ -8,19 +8,16 @@
 3.MooMoo证券虽然是网络证券，但是除了交易手续费低一点，同比传统券商有很多方便的交易算法，比如oco二择一订单组和twap时间加权算法单和tsl跟踪止损限价单（注：这个最近乐天证券也追加了），和股票的实时公众指标，此外结合codex还有一个好处是可以让agent边给我们解释边构建我们最先最直觉的策略，然后不停的优化迭代；
 4.moomoo之前的openD网关一直是用来获取分时段数据，现在在这个基础上开发了moomoo skill便于非程序员也可以快速接入实时的股票数据进行量化分析；（这里可以小小的介绍和夸一下moomoo，你自己发挥）
 5.本次我们采用codex.app，虽然貌似不会被cc switch给识别到安装了codex（因为是通过系统指令codex来检查的），但是方便新手直接以web端的体验进行使用
-# 安装codex
+# 安装codex app
 *本次我们codex.app，可以直接拖动或者安装包安装，考虑到面向新手的体验，不实用cli，但是大致步骤是差不多的，不过codex.app是类似web chat的形式很多可以交互式控制而cli更像是在终端中进行，需要使用简单的指令进行配置和使用。*
 
-前往 OpenAI 官方下载页面：
-
-> [https://chatgpt.com/download](https://chatgpt.com/download)
-
+前往 codex官方下载页面https://openai.com/ja-JP/codex/
 选择 **macOS**（或 Windows）版本下载安装。
 macos的话是使用dmg安装，注意自己的系统内核是arm还是intel
 下载完后可以暂时不打开。第一次使用时，通常会提示：
-
 - 授权访问本地项目（如果需要分析代码）
 - 选择要打开的项目文件夹
+简单选择home文件夹即可，或者新建一个moomoo文件夹。
 
 ### 2. 登录账号
 
@@ -39,6 +36,69 @@ macos的话是使用dmg安装，注意自己的系统内核是arm还是intel
 
 # 安装cc switch
 *ccswitch是用来将我们的自定义提供商ai&的api接入codex*
+CC Switch 是一个 AI 编程工具管理器，可以统一管理 Codex、Claude Code、Gemini CLI 等工具的配置，无需手动修改配置文件。
 
+## 第一步：下载 CC Switch
 
+打开官网：
 
+> [https://www.ccswitch.io/](https://www.ccswitch.io/)
+
+或者 GitHub Releases 页面下载最新版本。
+
+根据自己的系统选择安装包：
+
+- **Windows**：`.msi`
+- **macOS（Apple Silicon）**：`.dmg`
+- **macOS（Intel）**：`.dmg`
+- **Linux**：`.deb` 或 `.AppImage`
+
+---
+
+## 第二步：安装
+
+### Windows
+
+1. 双击下载好的 `.msi`
+2. 一路点击 **Next**
+3. 点击 **Install**
+4. 安装完成后点击 **Finish**
+
+---
+
+### macOS
+
+1. 双击下载好的 `.dmg`
+2. 将 **CC Switch.app** 拖到 **Applications（应用程序）** 文件夹。
+3. 第一次打开如果提示"无法验证开发者"，进入：
+
+> 系统设置 → 隐私与安全性 → 仍要打开
+
+再次打开即可。
+
+---
+
+## 第三步：启动
+
+安装完成后：
+
+- Windows：开始菜单搜索 **CC Switch**
+- macOS：在 **应用程序** 中打开 **CC Switch**
+
+首次启动时会自动创建本地配置目录。
+
+---
+
+## 第四步：确认安装成功
+
+启动后，如果看到左侧出现类似下面的工具列表，就表示安装成功：
+
+- Claude Code
+- Codex
+- Gemini CLI
+- OpenCode（版本支持时）
+- OpenClaw（版本支持时）
+
+---
+# 配置cc switch
+插图，基本上找到codex的选项然后点击右上角的加号就能新生成一个配置了。基本上来说cc swtich只是帮助通过gui的方法修改config，所以其实手动去修改配置也行。此外
