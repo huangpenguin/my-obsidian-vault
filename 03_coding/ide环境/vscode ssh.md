@@ -1,8 +1,4 @@
-远程跑linux其实最重要的是权限；
-
-比如user没有特定权限的话，执行的paddlepaddle可能无法使用gpu，而nvidia-smi也无法直接使用。
-
-此外，如果设置的动态是自动挂载的话，前一次从vscode退出，后一次可能就无法直接打开vscode进到上次的mnt里的文件夹了，因为尚未加载，需要另起一个cmd先访问mnt进行自动加载可以(已通过把ls /mnt/data > /dev/null 2>&1追加到.bashrc中解决)
+远程跑linux其实最重要的是权限；比如user没有特定权限的话，执行的paddlepaddle可能无法使用gpu，而nvidia-smi也无法直接使用。此外，如果设置的动态是自动挂载autofs（lazy-import）的话，前一次从vscode退出，后一次可能就无法直接打开vscode进到上次的mnt里的文件夹了，因为尚未加载，需要另起一个cmd先访问mnt进行自动加载可以
 
 ## 设置步骤：
 
