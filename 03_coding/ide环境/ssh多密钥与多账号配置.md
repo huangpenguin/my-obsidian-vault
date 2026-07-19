@@ -1,4 +1,4 @@
-````
+
 ---
 tags:
   - 技术/软件工程
@@ -21,15 +21,11 @@ ssh-keygen -t rsa -b 4096 -C "remote_user@example.com" -f ~/.ssh/id_rsa_remote
 
 **权限设置** (必须，否则 SSH 会拒绝连接)
 
-Bash
-
 ```
 chmod 600 ~/.ssh/id_rsa_*
 ```
 
 **SSH-Agent 托管** (避免频繁输密码)
-
-Bash
 
 ```
 eval "$(ssh-agent -s)"
@@ -44,7 +40,6 @@ ssh-add ~/.ssh/id_rsa_remote
 
 > [!note] 关键参数说明 `IdentitiesOnly yes`：强制只使用 IdentityFile 指定的私钥，防止多密钥冲突。
 
-Plaintext
 
 ```
 # ==========================================
@@ -89,16 +84,12 @@ Host github.com-work
 
 **获取公钥内容**
 
-Bash
-
 ```
 cat ~/.ssh/id_rsa_github_personal.pub
 # 复制输出内容，添加到 GitHub/GitLab 设置页面，或远程服务器的 ~/.ssh/authorized_keys
 ```
 
 **连通性测试**
-
-Bash
 
 ```
 ssh -T git@github.com-personal
@@ -110,7 +101,6 @@ ssh remote-pc
 
 **使用自定义 Host 克隆仓库** 地址中的域名必须替换为 `~/.ssh/config` 中配置的 `Host` 别名。
 
-Bash
 
 ```
 # 个人项目
@@ -121,8 +111,6 @@ git clone git@github.com-work:company/work-repo.git
 ```
 
 **配置局部身份信息** 进入具体项目目录后，取消全局身份，配置该项目专属的用户名和邮箱：
-
-Bash
 
 ```
 git config user.name "Your Name"
