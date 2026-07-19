@@ -48,8 +48,6 @@
 
 ### SSH 密钥和配置 SSH 连接
 
-[原理](https://app.notion.com/p/2101455baece80159dbed6386a5e972f?pvs=21)
-
 ```markdown
 ssh-keygen -t rsa -b 4096 -C "MPF"
 
@@ -61,8 +59,6 @@ ssh-copy-id huang@192.168.3.14
 ssh-copy-id -i ~/.ssh/id_rsa_remote_pc.pub huang@192.168.3.11
 
 ```
-
-[**手动复制公钥到远程主机（推荐）**](https://app.notion.com/p/2101455baece80e1b2ddc71256ec0c82?pvs=21)
 
 按 `Ctrl+Shift+P`，输入 `Remote-SSH: Open SSH Configuration File`，编辑配置：
 
@@ -158,50 +154,5 @@ ls /mnt/data
 192.168.3.14:/mnt/storage/data → /mnt/data
 ```
 
-### 网络下载
 
-```markdown
-#sdad 
-wget
-curl
-```
 
----
-
-## VS Code 多服务器管理技巧
-
-### 同时连接多台服务器
-
-```bash
-# 打开新的 VS Code 窗口连接 GPU 服务器
-Ctrl+Shift+P → Remote-SSH: Connect to Host in New Window → gpu-server
-
-```
-
-### 文件同步快捷方式
-
-在 VS Code 中创建任务：`.vscode/tasks.json`
-
-```json
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Sync to GPU Server",
-            "type": "shell",
-            "command": "rsync",
-            "args": [
-                "-avz",
-                "/datadrive/workspace/2021.aisin-tray-recognition/tray_recog/",
-                "user@gpu-server:/home/user/workspace/2021.aisin-tray-recognition/tray_recog/"
-            ],
-            "group": "build"
-        }
-    ]
-}
-
-```
-
-### 使用快捷键同步
-
-按 `Ctrl+Shift+P` → `Tasks: Run Task` → `Sync to GPU Server`
