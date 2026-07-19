@@ -6,7 +6,7 @@
 其中api考虑到可交换的openai request文,最好是直接支持response请求的，message/chat的方式比较复古，openai已经开始迁向response。
 然后性价比的话dpsk和glm5.2是最近比较便宜好用的模型，然后追求正确度的话可以上正统的gpt和claude的模型
 
-
+鱼书 deep learning from pytorch
 
 
 
