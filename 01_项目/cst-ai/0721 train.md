@@ -41,4 +41,3 @@ GitLab 上 push 到 `main` 后再手动跑 `train_paired_tiff_swinir_debug`�
 | 5-3 | 185–745 | 2244             |
 | 5-4 | 185–745 | 2244             |
 | 合计  |         | 8108（丢掉空白片 6228） |
-学習準備、pyrightバグ対応、tb出力美化
