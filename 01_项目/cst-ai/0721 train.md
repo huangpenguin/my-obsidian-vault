@@ -52,4 +52,18 @@ GitLab 上 push 到 `main` 后再手动跑 `train_paired_tiff_swinir_debug`�
     - 注意左侧列表中有一个带 `_archived_...` 后缀的文件夹，说明您的训练框架可能有自动归档旧日志的功能，但可能当前主文件夹里的旧 `events.out.tfevents...` 文件并未被彻底移除。
         
 
-帮我进行每次ci启动训练的合理命名操作
+
+# 数据集（固定）
+/mnt/data/cst_ai/datasets/aligned_drive/{LQ,GT}
+/mnt/home/huang/cst_ai/datasets/aligned_drive/{train.txt,val.txt,...}
+
+# 实验权重（跨 pipeline 续训看这里）
+/mnt/home/huang/cst_ai/experiments/aligned_drive/
+  └── train_SwinIR_grayDN_paired_tiff_noise25_P128W8/   ← 实验名
+        ├── models/net_g_5000.pth
+        └── training_states/5000.state
+
+# 某次 CI 流水线的附属输出（会变）
+/mnt/home/huang/cst_ai/ci_outputs/2695540961/            ← Pipeline ID
+  ├── tb_logger/...
+  └── experiments/   （旧逻辑会用；现在正式训练权重不靠这个续）
