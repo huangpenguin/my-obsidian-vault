@@ -1,0 +1,58 @@
+name: Publish selected notes to blog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.md"
+      - "**.markdown"
+      - ".github/workflows/publish-blog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-personal-blog
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the notes vault
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          path: vault
+
+      - name: Check out the blog
+        uses: actions/checkout@v5
+        with:
+          repository: huangpenguin/personal-blog
+          token: ${{ secrets.BLOG_REPO_TOKEN }}
+          path: blog
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: blog/package-lock.json
+
+      - name: Synchronize published notes
+        working-directory: blog
+        env:
+          OBSIDIAN_VAULT_PATH: ${{ github.workspace }}/vault
+        run: |
+          npm ci
+          npm run sync:notes
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/posts
+          if git diff --cached --quiet; then
+            echo "No published-note changes to push."
+          else
+            git commit -m "Sync selected Obsidian notes"
+            git push
+          fi
