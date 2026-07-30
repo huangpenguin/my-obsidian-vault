@@ -6,9 +6,20 @@ category: ""
 created: "{{date:YYYY-MM-DD}} {{time:HH:mm}}"
 updated: "{{date:YYYY-MM-DD}} {{time:HH:mm}}"
 status: draft
+publish: true
+---
+```
+---
+title: "文章标题"
+aliases: []
+tags: []
+category: ""
+published: "2026-07-30"
+updated: "2026-07-30"
+draft: false
 publish: false
 ---
-
+```
 # {{title}}
 
 > [!summary] 摘要

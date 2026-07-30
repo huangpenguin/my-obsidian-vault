@@ -1,3 +1,16 @@
+---
+title: "文章标题"
+aliases: []
+tags: []
+category: ""
+published: "2026-07-30"
+updated: "2026-07-30"
+draft: false
+publish: false
+---
+
+
+
 全栈技术栈汇总（技术选型）
 
 - **核心逻辑与 Agent 框架**：`Python 3.11+` + `Pydantic AI`（提供强类型、动态工具调用与自动重试机制）
