@@ -1,3 +1,17 @@
+---
+title: 文章标题
+aliases: []
+tags: []
+category: ""
+published: 2026-07-30
+updated: 2026-07-30
+draft: false
+publish: true
+---
+
+
+
+
 之前提到的cc swtich，我用自己的api和公司的账号可以自由的切换。
 然后用自己的api写了下面的文章，虽然暂时非官方的api貌似有bug。
 
