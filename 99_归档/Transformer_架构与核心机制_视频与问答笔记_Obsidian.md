@@ -36,31 +36,31 @@ Transformer 中的 FFN（Feed-Forward Network）本质上就是一个**逐 token
 
 经典形式：
 
-\[
+$$
 \mathrm{FFN}(x)
 =
 \sigma(xW_1+b_1)W_2+b_2
-\]
+$$
 
 常见的现代形式会使用 GELU / SwiGLU 等，例如：
 
-\[
+$$
 \mathrm{FFN}(x)
 =
 W_2\left(\mathrm{SiLU}(xW_g)\odot(xW_u)\right)
-\]
+$$
 
 其中：
 
-- 输入维度通常为 \(d_{\text{model}}\)
-- 中间维度 \(d_{\text{ff}}\) 通常大于 \(d_{\text{model}}\)
-- 输出重新回到 \(d_{\text{model}}\)
+- 输入维度通常为 $d_{\text{model}}$
+- 中间维度 $d_{\text{ff}}$ 通常大于 $d_{\text{model}}$
+- 输出重新回到 $d_{\text{model}}$
 
 例如：
 
-\[
+$$
 768 \rightarrow 3072 \rightarrow 768
-\]
+$$
 
 ### “Feed-forward” 是不是表示只推理一次？
 
@@ -82,20 +82,20 @@ W_2\left(\mathrm{SiLU}(xW_g)\odot(xW_u)\right)
 
 Attention 的一般形式：
 
-\[
+$$
 Q = X_QW_Q,\qquad
 K = X_KW_K,\qquad
 V = X_VW_V
-\]
+$$
 
-\[
+$$
 \mathrm{Attention}(Q,K,V)
 =
 \mathrm{softmax}
 \left(
 \frac{QK^\top}{\sqrt{d_k}}
 \right)V
-\]
+$$
 
 直觉：
 
@@ -115,13 +115,13 @@ Self-Attention 仍然使用完全相同的 Attention 公式。
 
 区别只在 **Q/K/V 的来源**：
 
-\[
+$$
 Q=XW_Q,\qquad
 K=XW_K,\qquad
 V=XW_V
-\]
+$$
 
-也就是说 Q、K、V 都由**同一段隐藏状态 \(X\)** 投影而来。
+也就是说 Q、K、V 都由**同一段隐藏状态 $X$** 投影而来。
 
 因此：
 
@@ -139,14 +139,14 @@ Cross-Attention 中：
 
 例如经典 Encoder-Decoder Transformer：
 
-\[
+$$
 Q = X_{\text{decoder}}W_Q
-\]
+$$
 
-\[
+$$
 K = X_{\text{encoder}}W_K,\qquad
 V = X_{\text{encoder}}W_V
-\]
+$$
 
 Decoder 用当前状态去“查询” Encoder 的表示。
 
@@ -158,36 +158,36 @@ Multi-Head Attention（MHA）是：
 
 > 同时在多个低维投影空间中计算 Attention，再把结果合并。
 
-第 \(i\) 个 head：
+第 $i$ 个 head：
 
-\[
+$$
 Q_i=XW_i^Q,\qquad
 K_i=XW_i^K,\qquad
 V_i=XW_i^V
-\]
+$$
 
-\[
+$$
 \mathrm{head}_i
 =
 \mathrm{Attention}(Q_i,K_i,V_i)
-\]
+$$
 
 多个 head 拼接：
 
-\[
+$$
 H
 =
 \mathrm{Concat}
 (
 \mathrm{head}_1,\ldots,\mathrm{head}_h
 )
-\]
+$$
 
 再经过输出投影：
 
-\[
+$$
 \mathrm{MHA}(X)=HW^O
-\]
+$$
 
 因此：
 
@@ -209,55 +209,55 @@ H
 
 假设：
 
-\[
+$$
 d_{\text{model}}=512,\qquad h=8
-\]
+$$
 
 经典 MHA 中：
 
-\[
+$$
 d_{\text{head}}=\frac{512}{8}=64
-\]
+$$
 
-## 3.1 不是直接把原始 \(X\) 的 0~63 维交给 Head 1
+## 3.1 不是直接把原始 $X$ 的 0~63 维交给 Head 1
 
 严格来说，真正流程是：
 
-\[
+$$
 X
 \rightarrow
 XW_Q
 =
 Q_{\text{total}}
-\]
+$$
 
 如果：
 
-\[
+$$
 X\in\mathbb{R}^{N\times512}
-\]
+$$
 
 而：
 
-\[
+$$
 W_Q\in\mathbb{R}^{512\times512}
-\]
+$$
 
 则：
 
-\[
+$$
 Q_{\text{total}}
 \in
 \mathbb{R}^{N\times512}
-\]
+$$
 
 然后 reshape 成：
 
-\[
+$$
 N\times h\times d_{\text{head}}
 =
 N\times8\times64
-\]
+$$
 
 ### 关键点
 
@@ -269,15 +269,15 @@ N\times8\times64
 
 但是：
 
-> 这些已经不是原始输入 \(X\) 的“原始第 0~63 维”。
+> 这些已经不是原始输入 $X$ 的“原始第 0~63 维”。
 
 在此之前：
 
-\[
+$$
 XW_Q
-\]
+$$
 
-已经让 **\(X\) 的所有 512 个输入维度都可以参与生成任意一个输出维度**。
+已经让 **$X$ 的所有 512 个输入维度都可以参与生成任意一个输出维度**。
 
 所以 Head 1 的 64 个 Q 特征，本质是：
 
@@ -291,17 +291,17 @@ XW_Q
 
 工程师在建模时先决定：
 
-- \(d_{\text{model}}\)
-- head 数 \(h\)
-- 每个 head 的维度 \(d_{\text{head}}\)
+- $d_{\text{model}}$
+- head 数 $h$
+- 每个 head 的维度 $d_{\text{head}}$
 
 例如：
 
-\[
+$$
 d_{\text{model}}=4096,\qquad h=32,\qquad d_{\text{head}}=128
-\]
+$$
 
-这里的 \(h\) 是**架构超参数**，不是训练过程中自动增加或减少的。
+这里的 $h$ 是**架构超参数**，不是训练过程中自动增加或减少的。
 
 ---
 
@@ -309,9 +309,9 @@ d_{\text{model}}=4096,\qquad h=32,\qquad d_{\text{head}}=128
 
 每个 head 的：
 
-\[
+$$
 W_i^Q,\;W_i^K,\;W_i^V
-\]
+$$
 
 都是可学习参数。
 
@@ -322,11 +322,11 @@ W_i^Q,\;W_i^K,\;W_i^V
 
 训练时：
 
-\[
+$$
 \theta
 \leftarrow
 \theta-\eta\nabla_\theta L
-\]
+$$
 
 所有投影矩阵会通过梯度下降被更新。
 
@@ -340,11 +340,11 @@ W_i^Q,\;W_i^K,\;W_i^V
 
 因为输出列的语义也是训练形成的。
 
-假设 \(W_Q\) 是：
+假设 $W_Q$ 是：
 
-\[
+$$
 512\times512
-\]
+$$
 
 其前 64 列最终进入 Head 1。
 
@@ -361,113 +361,113 @@ W_i^Q,\;W_i^K,\;W_i^V
 
 设：
 
-- batch：\(B\)
-- token 数：\(N\)
-- 模型宽度：\(d_{\text{model}}\)
-- head 数：\(h\)
-- head dimension：\(d_h\)
+- batch：$B$
+- token 数：$N$
+- 模型宽度：$d_{\text{model}}$
+- head 数：$h$
+- head dimension：$d_h$
 
 ## 单个 token
 
-\[
+$$
 x\in\mathbb{R}^{1\times d_{\text{model}}}
-\]
+$$
 
 经典单 head 投影：
 
-\[
+$$
 W_i^Q
 \in
 \mathbb{R}^{d_{\text{model}}\times d_h}
-\]
+$$
 
 因此：
 
-\[
+$$
 Q_i
 =
 xW_i^Q
 \in
 \mathbb{R}^{1\times d_h}
-\]
+$$
 
 例如：
 
-\[
+$$
 (1\times512)(512\times64)
 =
 1\times64
-\]
+$$
 
 ---
 
 ## 整个序列
 
-\[
+$$
 X
 \in
 \mathbb{R}^{N\times d_{\text{model}}}
-\]
+$$
 
 则：
 
-\[
+$$
 Q_i
 =
 XW_i^Q
 \in
 \mathbb{R}^{N\times d_h}
-\]
+$$
 
 ---
 
 ## 工程实现
 
-很多实现不会真的声明 \(h\) 个小矩阵，而是使用一个大的矩阵：
+很多实现不会真的声明 $h$ 个小矩阵，而是使用一个大的矩阵：
 
-\[
+$$
 W_Q
 \in
 \mathbb{R}^{d_{\text{model}}\times(hd_h)}
-\]
+$$
 
 经典 MHA 若满足：
 
-\[
+$$
 hd_h=d_{\text{model}}
-\]
+$$
 
 则：
 
-\[
+$$
 W_Q
 \in
 \mathbb{R}^{d_{\text{model}}\times d_{\text{model}}}
-\]
+$$
 
 然后：
 
-\[
+$$
 Q=XW_Q
-\]
+$$
 
 再 reshape：
 
-\[
+$$
 [B,N,h,d_h]
-\]
+$$
 
 接着 transpose 成：
 
-\[
+$$
 [B,h,N,d_h]
-\]
+$$
 
 便于每个 head 独立计算：
 
-\[
+$$
 QK^\top
-\]
+$$
 
 ---
 
@@ -475,20 +475,20 @@ QK^\top
 
 若写：
 
-\[
+$$
 1\times d_{\text{model}}
-\]
+$$
 
 表示：
 
 - 1 行
-- \(d_{\text{model}}\) 列
+- $d_{\text{model}}$ 列
 
 所以它是**行向量**。
 
 多个 token 直接上下堆叠：
 
-\[
+$$
 X=
 \begin{bmatrix}
 x_1\\
@@ -498,27 +498,27 @@ x_N
 \end{bmatrix}
 \in
 \mathbb{R}^{N\times d_{\text{model}}}
-\]
+$$
 
 然后就可以高效地一次做：
 
-\[
+$$
 XW_Q
-\]
+$$
 
 这是一种工程表示习惯。
 
 传统线性代数有时把向量写成列向量：
 
-\[
+$$
 x\in\mathbb{R}^{d\times1}
-\]
+$$
 
 并写：
 
-\[
+$$
 Wx
-\]
+$$
 
 两者本质只是 convention 不同。
 
@@ -528,53 +528,53 @@ Wx
 
 设：
 
-\[
+$$
 Q,K\in\mathbb{R}^{N\times d_k}
-\]
+$$
 
 则：
 
-\[
+$$
 QK^\top
 \in
 \mathbb{R}^{N\times N}
-\]
+$$
 
-第 \((i,j)\) 项：
+第 $(i,j)$ 项：
 
-\[
+$$
 q_i\cdot k_j
-\]
+$$
 
-表示 token \(i\) 的 Query 对 token \(j\) 的 Key 的匹配程度。
+表示 token $i$ 的 Query 对 token $j$ 的 Key 的匹配程度。
 
 再缩放：
 
-\[
+$$
 S
 =
 \frac{QK^\top}{\sqrt{d_k}}
-\]
+$$
 
 经过 softmax：
 
-\[
+$$
 A
 =
 \mathrm{softmax}(S)
-\]
+$$
 
 得到 Attention Matrix：
 
-\[
+$$
 A\in\mathbb{R}^{N\times N}
-\]
+$$
 
 最后：
 
-\[
+$$
 AV
-\]
+$$
 
 相当于：
 
@@ -582,17 +582,17 @@ AV
 
 ---
 
-# 8. 为什么要除以 \(\sqrt{d_k}\)？
+# 8. 为什么要除以 $\sqrt{d_k}$？
 
 如果 Q 和 K 各维近似独立且方差约为 1：
 
-\[
+$$
 q\cdot k
 =
 \sum_{j=1}^{d_k}q_jk_j
-\]
+$$
 
-其方差会随着 \(d_k\) 增大。
+其方差会随着 $d_k$ 增大。
 
 若点积数值很大：
 
@@ -603,9 +603,9 @@ q\cdot k
 
 因此用：
 
-\[
+$$
 \frac{1}{\sqrt{d_k}}
-\]
+$$
 
 把数量级拉回来。
 
@@ -615,31 +615,31 @@ q\cdot k
 
 数学上，如果输入 token 序列为：
 
-\[
+$$
 X=(x_1,x_2,\ldots,x_N)
-\]
+$$
 
 所有 token 都属于当前 Attention 计算的 sequence。
 
-长度 \(N\) 受模型 context window 和实现约束。
+长度 $N$ 受模型 context window 和实现约束。
 
 标准全注意力的主要瓶颈：
 
-\[
+$$
 QK^\top
-\]
+$$
 
 需要生成：
 
-\[
+$$
 N\times N
-\]
+$$
 
 的注意力关系，因此经典复杂度近似：
 
-\[
+$$
 O(N^2)
-\]
+$$
 
 ---
 
@@ -680,17 +680,17 @@ O(N^2)
 
 PCA：
 
-\[
+$$
 z=XW_{\text{PCA}}
-\]
+$$
 
 MHA：
 
-\[
+$$
 Q_i=XW_i^Q,\quad
 K_i=XW_i^K,\quad
 V_i=XW_i^V
-\]
+$$
 
 都存在投影到子空间的思想。
 
@@ -763,43 +763,43 @@ V_i=XW_i^V
 
 给一个 token 的隐藏向量：
 
-\[
+$$
 x=(x_1,\ldots,x_d)
-\]
+$$
 
 均值：
 
-\[
+$$
 \mu
 =
 \frac1d\sum_i x_i
-\]
+$$
 
 方差：
 
-\[
+$$
 \sigma^2
 =
 \frac1d
 \sum_i(x_i-\mu)^2
-\]
+$$
 
 标准化：
 
-\[
+$$
 \hat x_i
 =
 \frac{x_i-\mu}
 {\sqrt{\sigma^2+\epsilon}}
-\]
+$$
 
 再加可学习缩放与偏置：
 
-\[
+$$
 y_i
 =
 \gamma_i\hat x_i+\beta_i
-\]
+$$
 
 ### 注意
 
@@ -836,13 +836,13 @@ Normalization 并不是一定要让数据真的服从“正态分布”。
 
 L2 示例：
 
-\[
+$$
 L_{\text{total}}
 =
 L_{\text{task}}
 +
 \lambda\lVert W\rVert_2^2
-\]
+$$
 
 ---
 
@@ -869,30 +869,30 @@ L_{\text{task}}
 
 假设一层神经网络：
 
-\[
+$$
 z=Wx+b
-\]
+$$
 
 再经过激活函数：
 
-\[
+$$
 a=\sigma(z)
-\]
+$$
 
 这里的：
 
-\[
+$$
 a
-\]
+$$
 
 就是 activation。
 
 如果该层有多个神经元：
 
-\[
+$$
 a=
 [a_1,a_2,\ldots,a_d]
-\]
+$$
 
 就是一个 activation vector。
 
@@ -906,9 +906,9 @@ a=
 
 ### Weight
 
-\[
+$$
 W
-\]
+$$
 
 - 模型长期保存的参数
 - 训练完成后推理时通常固定
@@ -916,9 +916,9 @@ W
 
 ### Activation
 
-\[
+$$
 a
-\]
+$$
 
 - 根据当前输入实时计算
 - 每次输入都不同
@@ -930,9 +930,9 @@ a
 
 ## Residual
 
-\[
+$$
 y=x+F(x)
-\]
+$$
 
 作用：
 
@@ -948,23 +948,23 @@ y=x+F(x)
 
 现代 LLM 经常使用 Pre-Norm：
 
-\[
+$$
 x'
 =
 x+\mathrm{Attention}(\mathrm{Norm}(x))
-\]
+$$
 
-\[
+$$
 y
 =
 x'+\mathrm{FFN}(\mathrm{Norm}(x'))
-\]
+$$
 
 而原始 Transformer 论文是经典 Post-Norm 风格：
 
-\[
+$$
 \mathrm{Norm}(x+\mathrm{Sublayer}(x))
-\]
+$$
 
 现代大模型大量采用 Pre-Norm 或其变体，因为深层训练通常更稳定。
 
@@ -972,22 +972,22 @@ x'+\mathrm{FFN}(\mathrm{Norm}(x'))
 
 # 15. Masked / Causal Self-Attention
 
-GPT 生成第 \(i\) 个 token 时不能偷看未来 token。
+GPT 生成第 $i$ 个 token 时不能偷看未来 token。
 
 因此在 Attention Score 上加 causal mask：
 
-\[
+$$
 M_{ij}
 =
 \begin{cases}
 0,&j\le i\\
 -\infty,&j>i
 \end{cases}
-\]
+$$
 
 然后：
 
-\[
+$$
 A
 =
 \mathrm{softmax}
@@ -996,19 +996,19 @@ A
 +
 M
 \right)
-\]
+$$
 
 未来位置变成：
 
-\[
+$$
 \mathrm{softmax}(-\infty)\approx0
-\]
+$$
 
-于是 token \(i\) 只能读取：
+于是 token $i$ 只能读取：
 
-\[
+$$
 1,\ldots,i
-\]
+$$
 
 的信息。
 
@@ -1018,17 +1018,17 @@ M
 
 一个典型 decoder-only LLM block 可以抽象成：
 
-\[
+$$
 x_0
 =
 \mathrm{Embedding}
 +
 \mathrm{PositionInfo}
-\]
+$$
 
 ### Attention
 
-\[
+$$
 x_1
 =
 x_0
@@ -1037,11 +1037,11 @@ x_0
 (
 \mathrm{Norm}(x_0)
 )
-\]
+$$
 
 ### FFN
 
-\[
+$$
 x_2
 =
 x_1
@@ -1050,27 +1050,27 @@ x_1
 (
 \mathrm{Norm}(x_1)
 )
-\]
+$$
 
-重复 \(L\) 层：
+重复 $L$ 层：
 
-\[
+$$
 x_L
-\]
+$$
 
 最后：
 
-\[
+$$
 \mathrm{logits}
 =
 x_LW_{\text{vocab}}
-\]
+$$
 
-\[
+$$
 p(token)
 =
 \mathrm{softmax}(\mathrm{logits})
-\]
+$$
 
 ---
 
@@ -1118,29 +1118,29 @@ Multi-Head 只是其中一个例子。
 
 LoRA 规定：
 
-\[
+$$
 \Delta W
 =
 BA
-\]
+$$
 
 其中 rank：
 
-\[
+$$
 r\ll d
-\]
+$$
 
 例如：
 
-\[
+$$
 A\in\mathbb{R}^{r\times d_{\text{in}}}
-\]
+$$
 
-\[
+$$
 B\in\mathbb{R}^{d_{\text{out}}\times r}
-\]
+$$
 
-人类指定 rank \(r\)，但低秩子空间具体学什么由训练决定。
+人类指定 rank $r$，但低秩子空间具体学什么由训练决定。
 
 ---
 
@@ -1148,9 +1148,9 @@ B\in\mathbb{R}^{d_{\text{out}}\times r}
 
 人类只规定 embedding dimension，例如：
 
-\[
+$$
 d=4096
-\]
+$$
 
 不会规定：
 
@@ -1174,39 +1174,39 @@ RoPE（Rotary Position Embedding）不是简单地做到：
 
 可以抽象为：
 
-\[
+$$
 q_m
 =
 R_mq
-\]
+$$
 
-\[
+$$
 k_n
 =
 R_nk
-\]
+$$
 
 则：
 
-\[
+$$
 q_m^\top k_n
 =
 q^\top
 R_m^\top R_n
 k
-\]
+$$
 
 而：
 
-\[
+$$
 R_m^\top R_n
-\]
+$$
 
 只依赖：
 
-\[
+$$
 n-m
-\]
+$$
 
 所以它把相对位置信息编码进 Q/K 点积。
 
@@ -1218,19 +1218,19 @@ n-m
 
 对**经典标准 MHA 实现**通常成立：
 
-\[
+$$
 d_h=\frac{d_{\text{model}}}{h}
-\]
+$$
 
 但从一般 Attention 数学上，不是宇宙级硬约束。
 
 你完全可以设计：
 
-\[
+$$
 h d_h
 \ne
 d_{\text{model}}
-\]
+$$
 
 再使用额外投影矩阵变换回来。
 
@@ -1344,44 +1344,44 @@ Embedding
 
 设：
 
-\[
+$$
 B=\text{batch size}
-\]
+$$
 
-\[
+$$
 N=\text{sequence length}
-\]
+$$
 
-\[
+$$
 D=d_{\text{model}}
-\]
+$$
 
-\[
+$$
 H=\text{num heads}
-\]
+$$
 
-\[
+$$
 d_h=\text{head dimension}
-\]
+$$
 
 经典情况：
 
-\[
+$$
 D=Hd_h
-\]
+$$
 
 | Tensor | Shape |
 |---|---|
-| \(X\) | \([B,N,D]\) |
-| \(W_Q\) | \([D,Hd_h]\) |
-| \(Q\) | \([B,N,Hd_h]\) |
-| reshape Q | \([B,N,H,d_h]\) |
-| transpose Q | \([B,H,N,d_h]\) |
-| \(K^\top\) | \([B,H,d_h,N]\) |
-| \(QK^\top\) | \([B,H,N,N]\) |
-| Attention output per head | \([B,H,N,d_h]\) |
-| concat | \([B,N,Hd_h]\) |
-| output projection | \([B,N,D]\) |
+| $X$ | $[B,N,D]$ |
+| $W_Q$ | $[D,Hd_h]$ |
+| $Q$ | $[B,N,Hd_h]$ |
+| reshape Q | $[B,N,H,d_h]$ |
+| transpose Q | $[B,H,N,d_h]$ |
+| $K^\top$ | $[B,H,d_h,N]$ |
+| $QK^\top$ | $[B,H,N,N]$ |
+| Attention output per head | $[B,H,N,d_h]$ |
+| concat | $[B,N,Hd_h]$ |
+| output projection | $[B,N,D]$ |
 
 这个表如果记住，Multi-Head Attention 的大部分实现都不会再混乱。
 
@@ -1399,10 +1399,10 @@ D=Hd_h
 | LayerNorm | 数值如何稳定？ | 规范化隐藏状态 |
 | Regularization | 怎么减少过拟合？ | 给学习过程加入约束 |
 | Activation | 当前输入算出了什么中间状态？ | 网络的动态中间表示 |
-| Residual | 深层网络怎么更容易训练？ | \(x+F(x)\) |
-| Causal Mask | 怎么禁止看未来？ | 未来 attention score 设为 \(-\infty\) |
+| Residual | 深层网络怎么更容易训练？ | $x+F(x)$ |
+| Causal Mask | 怎么禁止看未来？ | 未来 attention score 设为 $-\infty$ |
 | RoPE | token 位置怎么进入 Attention？ | 旋转 Q/K，使点积依赖相对位置 |
-| LoRA | 如何低成本微调？ | 用低秩 \(BA\) 表示 \(\Delta W\) |
+| LoRA | 如何低成本微调？ | 用低秩 $BA$ 表示 $\Delta W$ |
 
 ---
 
@@ -1412,18 +1412,18 @@ D=Hd_h
 
 1. **把本笔记中的 Shape 全部真正推一遍**
 2. 手写一次：
-   \[
+   $$
    Q=XW_Q,\ K=XW_K,\ V=XW_V
-   \]
+   $$
 3. 手算一个 3-token、2-head 的 tiny attention
 4. PyTorch 手写：
    - linear
    - reshape
    - transpose
-   - \(QK^\top\)
+   - $QK^\top$
    - mask
    - softmax
-   - \(AV\)
+   - $AV$
 5. 再理解：
    - Pre-Norm / Post-Norm
    - RoPE
@@ -1454,7 +1454,7 @@ D=Hd_h
 
 ### 直觉 3
 
-> **reshape 本身只是排布；真正形成每个 head 语义空间的是前面的可学习投影。**
+> **reshape 本身只是排布；真正形成每个 head 语义空间的是前面的可学习投影。工程学上就先放在大矩阵计算，再进行reshape切分效率更高。**
 
 ### 直觉 4
 
